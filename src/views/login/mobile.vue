@@ -3,7 +3,7 @@
     <div class="top">
       <div class="top-img"></div>
     </div>
-    <div class="title">会议室预订APP</div>
+    <div class="title">校园会议室预订</div>
     <div class="middle">
       <div class="tab">
         <div class="tab-item" :class="{active:this.switch==1}" @click="tabSwitch(1)">用户登录</div>
@@ -31,8 +31,6 @@
           </span>
         </div>
       </div>
-      <van-checkbox v-model="remember" shape="square" checked-color="#132CF8" style="position: relative;top:-30px">记住密码
-      </van-checkbox>
       <div class="button" @click="handleLogin">{{this.switch==1?'登录':'注册'}}</div>
     </div>
   </div>
@@ -40,29 +38,15 @@
 
 <script>
   import {
-    getUsername,
-    setUsername,
-    removeUsername,
-    getPassword,
-    setPassword,
-    removePassword
-  } from '@/utils/auth'
-  import {
-    Checkbox,
     Notify
   } from 'vant';
   export default {
     name: 'login',
     components: {
-      Checkbox,
       Notify
-    },
-    computed: {
-
     },
     data() {
       return {
-        remember: false,
         switch: 1,
         username: '',
         password: '',
@@ -80,11 +64,6 @@
         },
         immediate: true
       }
-    },
-    mounted() {
-      this.username = getUsername()
-      this.password = getPassword()
-      this.surePassword = getPassword()
     },
     methods: {
       tabSwitch(val) {
@@ -139,13 +118,6 @@
         if (!this.flag) {
           return
         } else {
-          if (this.remember) {
-            setUsername(this.username)
-            setPassword(this.password)
-          } else {
-            removeUsername()
-            removePassword()
-          }
           if (this.switch == 1) { // 登录
             let params = {
               username: this.username,
@@ -237,8 +209,8 @@
       padding: 10px 0 0;
 
       img {
-        height: 0.5rem;
-        width: 0.5rem;
+        height: 0.4rem;
+        width: 0.4rem;
         margin-right: 0.5rem;
         margin-top: 0.1rem;
       }

@@ -4,14 +4,15 @@
       <div class="top-logo"></div>
       <span class="top-title">校园会议室管理系统</span>
     </div>
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="off" auto-complete="off"
-      label-position="left">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="off"
+      auto-complete="off" label-position="left">
       <h2 class="login-title">登录</h2>
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
-        <el-input ref="username" v-model="loginForm.username" placeholder="用户名" name="username" type="text" tabindex="1"/>
+        <el-input ref="username" v-model="loginForm.username" placeholder="用户名" name="username" type="text"
+          tabindex="1" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
@@ -24,8 +25,7 @@
         </span>
       </el-form-item>
       <div style="margin-top: -5px;">
-        <el-checkbox v-model="remember">记住密码</el-checkbox>
-        <span class="info" @click="goRegister">没有账号</span>
+        <span class="info" @click="goRegister">没有账号? <span class="info-register">注册</span></span>
       </div>
       <el-button :loading="loading" type="primary" class="login-button" @click.native.prevent="handleLogin">点击登录
       </el-button>
@@ -34,19 +34,10 @@
 </template>
 
 <script>
-  import {
-    getUsername,
-    setUsername,
-    removeUsername,
-    getPassword,
-    setPassword,
-    removePassword
-  } from '@/utils/auth'
   export default {
     name: 'Login',
     data() {
       return {
-        remember: false,
         loginForm: {
           username: '',
           password: ''
@@ -81,10 +72,6 @@
         immediate: true
       }
     },
-    mounted() {
-      this.loginForm.username = getUsername()
-      this.loginForm.password = getPassword()
-    },
     methods: {
       showPwd() {
         if (this.passwordType === 'password') {
@@ -97,18 +84,11 @@
         })
       },
       goRegister() {
-          this.$router.push('pcRegister')
+        this.$router.push('pcRegister')
       },
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
           if (valid) {
-            if (this.remember) {
-              setUsername(this.loginForm.username)
-              setPassword(this.loginForm.password)
-            } else {
-              removeUsername()
-              removePassword()
-            }
             this.loading = true
             this.$store.dispatch('user/login', this.loginForm).then(() => {
               this.$router.push({
@@ -123,7 +103,6 @@
       }
     }
   }
-
 </script>
 
 <style lang="scss">
@@ -141,18 +120,16 @@
       input {
         background: #fff;
         border: none;
-        color: #C1C1C1;
-        caret-color: #C1C1C1;
-        border:1px solid red;
+        color: #8E8E8E;
+        caret-color: #8E8E8E;
 
         &:-webkit-autofill {
           -webkit-box-shadow: 0 0 0px 1000px white inset;
-          -webkit-text-fill-color: #C1C1C1 !important;
+          -webkit-text-fill-color: #8E8E8E !important;
         }
       }
     }
   }
-
 </style>
 <style lang="scss" scoped>
   .login {
@@ -170,8 +147,8 @@
     .top-logo {
       background: url(../../assets/images/logo.png) no-repeat center;
       background-size: 100% 100%;
-      height: 40px;
-      width: 40px;
+      height: 30px;
+      width: 30px;
       display: inline-block;
     }
 
@@ -179,7 +156,7 @@
       color: #515a6e;
       font-weight: 500;
       font-size: 18px;
-      line-height: 40px;
+      line-height: 30px;
       letter-spacing: 2px;
       vertical-align: top;
       margin-left: 10px;
@@ -190,7 +167,7 @@
     position: absolute;
     top: 150px;
     left: 250px;
-    width: 300px;
+    width: 350px;
 
     .login-title {
       color: #4135DD;
@@ -201,7 +178,7 @@
     .el-form-item {
       border: 2px solid rgba(0, 0, 0, 0.1);
       border-radius: 30px;
-      color: #454545;
+      color: #000;
     }
 
     .svg-container {
@@ -225,7 +202,11 @@
     .info {
       color: #606266;
       font-size: 14px;
-      float: right;
+      cursor:pointer;
+    }
+
+    .info-register{
+      color:#4135DD;
     }
 
     .login-button {
@@ -239,6 +220,13 @@
       letter-spacing: 5px;
       margin-top: 30px;
     }
-  }
 
+    .login-button:hover {
+      background-image: linear-gradient(to right, #4135DD, #A3CEF0);
+    }
+
+    .login-button:active {
+      transform: scale(0.95, 0.95)
+    }
+  }
 </style>

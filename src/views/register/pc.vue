@@ -36,7 +36,7 @@
         </span>
       </el-form-item>
       <div style="margin-top: -5px;">
-        <span class="info" @click="goLogin">已有账号</span>
+        <span class="info" @click="goLogin">已有账号? <span class="info-register">登录</span></span>
       </div>
       <el-button :loading="loading" type="primary" class="login-button" @click.native.prevent="handleRegister">点击注册
       </el-button>
@@ -154,11 +154,12 @@
       input {
         background: #fff;
         border: none;
-        color: #C1C1C1;
-        caret-color: #C1C1C1;
+        color: #8E8E8E;
+        caret-color: #8E8E8E;
 
         &:-webkit-autofill {
-          -webkit-text-fill-color: #C1C1C1 !important;
+          -webkit-box-shadow: 0 0 0px 1000px white inset;
+          -webkit-text-fill-color: #8E8E8E !important;
         }
       }
     }
@@ -181,16 +182,16 @@
     .top-logo {
       background: url(../../assets/images/logo.png) no-repeat center;
       background-size: 100% 100%;
-      height: 40px;
-      width: 40px;
+      height: 30px;
+      width: 30px;
       display: inline-block;
     }
 
     .top-title {
-      color: #333;
+      color: #515a6e;
       font-weight: 500;
       font-size: 18px;
-      line-height: 40px;
+      line-height: 30px;
       letter-spacing: 2px;
       vertical-align: top;
       margin-left: 10px;
@@ -201,7 +202,7 @@
     position: absolute;
     top: 150px;
     left: 250px;
-    width: 300px;
+    width: 350px;
 
     .login-title {
       color: #4135DD;
@@ -212,7 +213,7 @@
     .el-form-item {
       border: 2px solid rgba(0, 0, 0, 0.1);
       border-radius: 30px;
-      color: #454545;
+      color: #000;
     }
 
     .svg-container {
@@ -236,7 +237,11 @@
     .info {
       color: #606266;
       font-size: 14px;
-      float: right;
+      cursor:pointer;
+    }
+
+        .info-register{
+      color:#4135DD;
     }
 
     .login-button {
@@ -249,6 +254,14 @@
       height: 40px;
       letter-spacing: 5px;
       margin-top: 30px;
+    }
+
+        .login-button:hover {
+      background-image: linear-gradient(to right, #4135DD, #A3CEF0);
+    }
+
+    .login-button:active {
+      transform: scale(0.95, 0.95)
     }
   }
 
