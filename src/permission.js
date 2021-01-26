@@ -9,7 +9,6 @@ const whiteList = ['/pcLogin','/mobileLogin','/pcRegister']
 router.beforeEach(async(to, from, next) => {
   document.title = getPageTitle(to.meta.title)
   const hasToken = getToken()
-  
   next()
   // if (hasToken) {
   //   if (to.path === '/pcLogin') {

@@ -23,10 +23,13 @@
             <div class="meeting-theme">{{item.meetingTheme}}</div>
             <div class="room-name">{{item.roomName}}</div>
             <van-tag plain type="success" v-if="item.projector" style="margin-right: 10px;">投影仪</van-tag>
-            <van-tag plain type="success" v-if="item.computer" style="margin-right: 10px;">电脑</van-tag>
+            <van-tag plain type="success" v-if="item.display" style="margin-right: 10px;">显示屏</van-tag>
+            <van-tag plain type="success" v-if="item.blackboard" style="margin-right: 10px;">黑板</van-tag>
             <van-tag plain type="success" v-if="item.whiteboard" style="margin-right: 10px;">白板</van-tag>
             <div class="room-time">{{item.date}} {{item.startTime}} ~ {{item.endTime}}</div>
-            <div class="button" @click="unsubscribe(item.id)">退订</div>
+            <div class="logo used" v-if="item.status==0">未审批</div>
+            <div class="logo unused" v-if="item.status==1">通过</div>
+            <div class="logo overdue" v-if="item.status==2">驳回</div>
           </div>
         </div>
       </div>
@@ -63,7 +66,7 @@
         this.recordList = [{
             id: 1,
             roomName: '雅兰阁',
-            roomNum: '1101',
+            roomLocation: '1101',
             date: '2020年11月15日',
             startTime: '13:00',
             endTime: '14:10',
@@ -72,13 +75,14 @@
             bookPerson: '黄佳佳',
             nameList: ['黄佳佳', '小家', '黄佳佳', '小和', '黄佳佳', '小家'],
             projector: 1,
-            computer: 0,
-            whiteboard: 1
+            display: 0,
+            whiteboard: 1,
+            status: 2
           },
           {
             id: 1,
             roomName: '雅兰阁',
-            roomNum: '1101',
+            roomLocation: '1101',
             date: '2020年11月15日',
             startTime: '13:00',
             endTime: '14:10',
@@ -86,24 +90,22 @@
             meetingTheme: '后台管理项',
             nameList: ['黄佳佳', '小家', '黄佳佳', '小和', '黄佳佳', '小家'],
             projector: 0,
-            computer: 0,
-            whiteboard: 1
+            display: 0,
+            whiteboard: 1,
+            status: 1
           }
         ]
         this.loading = false
       },
       // 详细
       goDetail(id) {
-        console.log(id)
+        this.$router.push({
+          path: '/mobileRecord/detail?id=' + id
+        })
       },
-      // 退订
-      unsubscribe(id) {
-        console.log(id)
-      }
 
     },
   }
-
 </script>
 <style lang="scss" scoped>
   .tab {
@@ -144,12 +146,12 @@
     width: 100%;
 
     .list-item {
-      margin: 10px 4% 0;
+      margin: 10px 3% 0;
       background: #fff;
       border-radius: 5px;
       box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
       height: 110px;
-      width: 92%;
+      width: 94%;
       display: flex;
       padding: 10px;
       box-sizing: border-box;
@@ -193,19 +195,34 @@
     font-size: 16px;
   }
 
-  .button {
-    color: #fff;
-    background-image: linear-gradient(to bottom, #EC6796, #FD6D64);
-    height: 25px;
-    width: 50px;
-    text-align: center;
-    vertical-align: middle;
+
+
+  .logo {
+    height: 1.2rem;
+    width: 1.2rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(-330deg);
+    z-index: 1;
     position: relative;
-    left: 170px;
-    top: -100px;
-    border-radius: 2px;
-    font-size: 12px;
-    line-height: 25px;
+    left: 190px;
+    top: -110px;
   }
 
+  .overdue {
+    border: 2px solid #F66862;
+    color: #F66F6A;
+  }
+
+  .used {
+    border: 2px solid #ff9900;
+    color: #ff9900;
+  }
+
+  .unused {
+    border: 2px solid #55C463;
+    color: #55C463;
+  }
 </style>

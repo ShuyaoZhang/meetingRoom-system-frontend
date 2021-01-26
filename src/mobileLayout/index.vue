@@ -1,10 +1,11 @@
 <template>
   <div class="mobileLayout">
-    <van-nav-bar title="会议室预订" left-text="返回" left-arrow @click-left="back" />
-    <div class="main">
+    <van-nav-bar title="会议室预订" v-if="!haveBack"/>
+    <van-nav-bar title="会议室预订" left-text="返回" left-arrow @click-left="back" v-else/>
+    <div :class="['main',{'minHeight':!haveBack}]">
       <router-view :key="key" />
     </div>
-    <van-tabbar v-model="active" z-index='100' active-color="#132CF8" route>
+    <van-tabbar v-model="active" z-index='100' active-color="#132CF8" route v-if="!haveBack">
       <van-tabbar-item to="/mobileIndex" icon="shop-o">首页</van-tabbar-item>
       <van-tabbar-item to="/mobileBook" icon="add-o">预定</van-tabbar-item>
       <van-tabbar-item to="/mobileMeeting" icon="calendar-o">我的会议</van-tabbar-item>
@@ -27,16 +28,21 @@
       Tabbar,
       TabbarItem
     },
-    created() {},
+    created() {
+
+    },
     computed: {
       key() {
         return this.$route.path
+      },
+      haveBack(){
+        return this.$route.path=='/mobileRecord/detail' ? true : false
       }
     },
     methods: {
       // 返回
       back() {
-
+        this.$router.go(-1)
       }
     },
   }
@@ -56,6 +62,9 @@
 .main{
   background: #f7f8fa;
   width: 100%;
+}
+
+.minHeight{
   min-height: calc(100vh - 96px);
 }
 </style>

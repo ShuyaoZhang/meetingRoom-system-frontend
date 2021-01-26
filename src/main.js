@@ -16,7 +16,7 @@ import {
   Checkbox,
   Notify,
   NavBar,
-  Tabbar,TabbarItem,Tag,Loading,Form,Calendar,DatetimePicker,Field,Stepper,Popup,Icon,Picker
+  Tabbar,TabbarItem,Tag,Loading,Form,Calendar,DatetimePicker,Field,Stepper,Popup,Icon,Picker,Cell, CellGroup
 } from 'Vant'
 import 'vant/lib/index.css';
 
@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 Vue.use(ElementUI, { locale })
-Vue.use(Button).use(Checkbox).use(Notify).use(NavBar).use(Tabbar).use(TabbarItem).use(Tag).use(Loading).use(Form).use(Calendar).use(DatetimePicker).use(Field).use(Stepper).use(Popup).use(Icon).use(Picker)
+Vue.use(Button).use(Checkbox).use(Notify).use(NavBar).use(Tabbar).use(TabbarItem).use(Tag).use(Loading).use(Form).use(Calendar).use(DatetimePicker).use(Field).use(Stepper).use(Popup).use(Icon).use(Picker).use(Cell).use(CellGroup)
 Vue.config.productionTip = false
 
 new Vue({

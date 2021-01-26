@@ -1,6 +1,6 @@
 <template>
   <div class="mobileBook">
-    <van-form @submit="onSubmit" colon>
+    <van-form colon>
       <van-field clickable name="calendar" :value="form.date" label="日期" placeholder="请选择日期"
         @click="showCalendar = true" required is-link />
       <van-calendar v-model="showCalendar" @confirm="selectDate" color="#132CF8" :min-date="minDate"
@@ -34,8 +34,11 @@
           <van-tag :plain="!form.projectorSelect" type="primary" @click="form.projectorSelect = !form.projectorSelect"
             class="tag" size="large" color="#132CF8">
             投影仪</van-tag>
-          <van-tag :plain="!form.computerSelect" type="primary" @click="form.computerSelect = !form.computerSelect"
-            class="tag" size="large" color="#132CF8">电脑
+          <van-tag :plain="!form.displaySelect" type="primary" @click="form.displaySelect = !form.displaySelect"
+            class="tag" size="large" color="#132CF8">显示屏
+          </van-tag>
+          <van-tag :plain="!form.blackboardSelect" type="primary"
+            @click="form.blackboardSelect = !form.blackboardSelect" class="tag" size="large" color="#132CF8">黑板
           </van-tag>
           <van-tag :plain="!form.whiteboardSelect" type="primary"
             @click="form.whiteboardSelect = !form.whiteboardSelect" class="tag" size="large" color="#132CF8">白板
@@ -48,7 +51,8 @@
         <div class="search-text">查询会议室</div>
       </div>
 
-      <van-field clickable name="picker" :value="form.roomId" label="选择会议室" placeholder="请选择会议室" @click="showPicker = true" required is-link />
+      <van-field clickable name="picker" :value="form.roomId" label="选择会议室" placeholder="请选择会议室"
+        @click="showPicker = true" required is-link />
       <van-popup v-model="showPicker" position="bottom">
         <van-picker show-toolbar :columns="roomList" @confirm="selectRoom" @cancel="showPicker = false" />
       </van-popup>
@@ -69,7 +73,8 @@
     Field,
     Stepper,
     Tag,
-    Icon,Picker
+    Icon,
+    Picker
   } from 'vant';
   import {
     parseTime,
@@ -85,9 +90,10 @@
           num: 2,
           meetingTheme: '',
           projectorSelect: false,
-          computerSelect: false,
+          displaySelect: false,
+          blackboardSelect: false,
           whiteboardSelect: false,
-          roomId:''
+          roomId: ''
         },
         showCalendar: false,
         minDate: new Date(),
@@ -123,19 +129,18 @@
         this.form.endTime = time
         this.showEndPicker = false;
       },
-      selectRoom(val){
+      selectRoom(val) {
         this.form.roomId = val;
         this.showPicker = false;
       },
-      search(){
+      search() {
 
       },
-      sure(){
+      sure() {
 
       }
     },
   }
-
 </script>
 <style lang="scss" scoped>
   .tag {
@@ -154,5 +159,4 @@
       margin-bottom: 10px;
     }
   }
-
 </style>

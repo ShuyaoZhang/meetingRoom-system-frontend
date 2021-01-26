@@ -91,7 +91,7 @@
     }
 
     .router-link-exact-active .is-active{
-      border-left: 3px solid $menuActiveBorder;
+      //border-left: 3px solid $menuActiveBorder;
       background-color: $subMenuHover !important;
     }
   }

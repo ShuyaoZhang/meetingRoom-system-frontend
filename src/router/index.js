@@ -24,8 +24,7 @@ import mobileLayout from '@/mobileLayout'
   }
  */
 
-export const constantRoutes = [
-  {
+export const constantRoutes = [{
     path: '/pcLogin',
     component: () => import('@/views/login/pc'),
     hidden: true
@@ -47,9 +46,8 @@ export const constantRoutes = [
   },
 
   {
-    path: '/',
+    path: '/mobileIndex',
     component: mobileLayout,
-    redirect: '/mobileIndex',
     children: [{
       path: 'mobileIndex',
       name: 'mobileIndex',
@@ -87,6 +85,10 @@ export const constantRoutes = [
       path: '/',
       name: 'mobileRecord',
       component: () => import('@/views/record/mobile')
+    }, {
+      path: 'detail',
+      name: 'mobileDetail',
+      component: () => import('@/views/detail/mobile')
     }],
     hidden: true
   },
@@ -94,21 +96,30 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
     children: [{
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: {
+        title: 'Dashboard',
+        icon: 'dashboard'
+      }
     }]
   },
 
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+
+
+  {
+    path: '*',
+    redirect: '/404',
+    hidden: true
+  }
 ]
 
 const createRouter = () => new Router({
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({
+    y: 0
+  }),
   routes: constantRoutes
 })
 
@@ -116,7 +127,7 @@ const router = createRouter()
 
 export function resetRouter() {
   const newRouter = createRouter()
-  router.matcher = newRouter.matcher 
+  router.matcher = newRouter.matcher
 }
 
 export default router

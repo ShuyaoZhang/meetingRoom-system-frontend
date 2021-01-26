@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      title: '校园会议室管理系统',
+      title: '校园会议室管理',
     }
   }
 }
@@ -63,9 +63,9 @@ export default {
       display: inline-block;
       margin: 0;
       color: #fff;
-      font-weight: 600;
+      font-weight: 400;
       line-height: 50px;
-      font-size: 16px;
+      font-size: 15px;
       font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
       vertical-align: middle;
     }

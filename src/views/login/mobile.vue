@@ -123,20 +123,27 @@
               username: this.username,
               password: this.password
             }
-            console.log(params)
+            this.$store.dispatch('user/login', params).then(() => {
+              this.$router.push({
+                path: 'mobileIndex'
+              })
+            })
           } else { // 注册
             let params = {
               username: this.username,
               password: this.password,
               surePassword: this.surePassword
             }
-            console.log(params)
+            this.$store.dispatch('user/register', params).then(() => {
+              this.$router.push({
+                path: 'mobileLogin'
+              })
+            })
           }
         }
       }
     }
   }
-
 </script>
 <style lang="scss" scoped>
   .top {
@@ -238,5 +245,4 @@
       }
     }
   }
-
 </style>
