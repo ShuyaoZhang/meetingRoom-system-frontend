@@ -47,3 +47,22 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+
+// 页面公共样式
+.query-button{
+  margin-left: 20px!important;
+}
+
+.delete{
+  color: #F56C6C!important;
+}
+
+.colorRed{
+  color:red!important;
+  opacity:0.7;
+}
+
+.pagination {
+  float: right;
+  margin-top: 20px;
+}
