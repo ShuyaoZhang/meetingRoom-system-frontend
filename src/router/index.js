@@ -93,21 +93,105 @@ export const constantRoutes = [{
     hidden: true
   },
 
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'dashboard',
+  //     name: 'Dashboard',
+  //     component: () => import('@/views/dashboard/index'),
+  //     meta: {
+  //       title: 'Dashboard',
+  //       icon: 'dashboard'
+  //     }
+  //   }]
+  // },
+
   {
-    path: '/',
+    path: '/pcBook',
     component: Layout,
+    meta: {
+      title: '预订',
+      icon: 'pcBook'
+    },
     children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
+      path: '',
+      name: 'pcBook',
+      component: () => import('@/views/book/pc'),
       meta: {
-        title: 'Dashboard',
-        icon: 'dashboard'
+        title: '我要预订',
+        icon: 'book'
       }
-    }]
+    }, {
+      path: 'record',
+      name: 'bookRecord',
+      component: () => import('@/views/record/pc'),
+      meta: {
+        title: '预订记录',
+        icon: 'record'
+      }
+    }],
   },
 
+  {
+    path: '/manage',
+    component: Layout,
+    meta: {
+      title: '会议室管理',
+      icon: 'manage'
+    },
+    children: [{
+      path: 'config',
+      name: 'config',
+      component: () => import('@/views/manage/config'),
+      meta: {
+        title: '会议室配置',
+        icon: 'config'
+      }
+    }, {
+      path: 'approve',
+      name: 'approve',
+      component: () => import('@/views/manage/approve'),
+      meta: {
+        title: '预订审批',
+        icon: 'approve'
+      }
+    }, {
+      path: 'bookList',
+      name: 'bookList',
+      component: () => import('@/views/manage/bookList'),
+      meta: {
+        title: '预订列表',
+        icon: 'bookList'
+      }
+    }, {
+      path: 'statistics',
+      name: 'statistics',
+      component: () => import('@/views/manage/statistics'),
+      meta: {
+        title: '统计分析',
+        icon: 'statistics'
+      }
+    }],
+  },
 
+  {
+    path: '/user',
+    component: Layout,
+    meta: {
+      title: '用户管理',
+      icon: 'user'
+    },
+    children: [{
+      path: 'userList',
+      name: 'userList',
+      component: () => import('@/views/user/userList'),
+      meta: {
+        title: '用户列表',
+        icon: 'userList'
+      }
+    }],
+  },
 
   {
     path: '*',

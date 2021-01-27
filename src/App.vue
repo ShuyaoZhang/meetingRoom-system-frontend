@@ -18,11 +18,11 @@
       },
     },
     mounted() {
-      if (this.device) {
-        this.$router.push('/mobileLogin');
-      } else {
-        this.$router.push('/pcLogin');
-      }
+      // if (this.device) {
+      //   this.$router.push('/mobileLogin');
+      // } else {
+      //   this.$router.push('/pcLogin');
+      // }
     }
   }
 
