@@ -15,10 +15,11 @@
 
         <el-table v-loading="listLoading" :data="tableData" :cell-style="{padding:'2px'}"
             :header-cell-style="{background:'#f8f8f9',color:'#333','font-weight': '600'}">
-            <el-table-column v-for="item in columns" :prop="item.prop" :label="item.label" align="center">
+            <el-table-column v-for="item in columns" :prop="item.prop" :label="item.label">
             </el-table-column>
             <el-table-column label="位置">
                 <template slot-scope="scope">
+                    <i class="el-icon-location"></i>
                     {{scope.row.building |change(buildingList,'id','buildingName')}}{{scope.row.roomLocation}}
                 </template>
             </el-table-column>
@@ -44,6 +45,10 @@
         </el-pagination>
 
         <el-dialog :title="dialogType==1? '新增会议室' : '编辑会议室'" :visible.sync="dialogVisible" width="25%">
+            <div class="dialog-img">
+                <img src="@/assets/images/add.png" v-if="dialogType==1">
+                <img src="@/assets/images/edit.png" v-if="dialogType==2">
+            </div>
             <el-form :model="form" ref="form" :rules="formRules" size="small" label-position="right"
                 label-width="110px">
                 <el-form-item label="会议室名称：" prop="roomName">
@@ -120,7 +125,7 @@
                 },
                 columns: [ // 列
                     {
-                        label: '名称',
+                        label: '会议室名称',
                         prop: 'roomName',
                     },
                     {
