@@ -127,3 +127,17 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+export const buildingList = [
+  {id:1,buildingName: '教学楼'},
+  {id:2,buildingName: '图书馆'},
+  {id:3,buildingName: '行政楼'},
+  {id:4,buildingName: '宿舍楼'},
+]
+
+export const projectorList = [
+  {id:1,projectorName: '投影仪',field:'projector'},
+  {id:2,projectorName: '显示屏',field:'display'},
+  {id:3,projectorName: '黑板',field:'blackboard'},
+  {id:4,projectorName: '白板',field:'whiteboard'},
+]

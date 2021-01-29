@@ -22,6 +22,8 @@ import 'vant/lib/index.css';
 import '@/icons' // 全局部分
 import '@/permission' 
 import 'lib-flexible'
+import filters from './filters'// 全局过滤器
+Object.keys(filters).forEach(key => Vue.filter(key, filters[key]))
 
 
 if (process.env.NODE_ENV === 'production') {
