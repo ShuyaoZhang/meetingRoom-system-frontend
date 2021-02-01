@@ -156,6 +156,15 @@ export const constantRoutes = [{
         title: '预订审批',
         icon: 'approve'
       }
+    },{
+      path: 'approveDetail',
+      name: 'approveDetail',
+      component: () => import('@/views/manage/approveDetail'),
+      hiddle:true,
+      meta: {
+        title: '预订审批',
+        icon: 'approve'
+      }
     }, {
       path: 'bookList',
       name: 'bookList',

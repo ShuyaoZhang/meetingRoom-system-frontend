@@ -141,3 +141,9 @@ export const projectorList = [
   {id:3,projectorName: '黑板',field:'blackboard'},
   {id:4,projectorName: '白板',field:'whiteboard'},
 ]
+
+export const statusList = [
+  {id:1,statusName: '通过',adminName:'已通过'},
+  {id:2,statusName: '驳回',adminName:'已驳回'},
+  {id:0,statusName: '未审批',adminName:'立即处理'}
+]
