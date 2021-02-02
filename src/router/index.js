@@ -160,7 +160,7 @@ export const constantRoutes = [{
       path: 'approveDetail',
       name: 'approveDetail',
       component: () => import('@/views/manage/approveDetail'),
-      hiddle:true,
+      hidden: true ,
       meta: {
         title: '预订审批',
         icon: 'approve'
