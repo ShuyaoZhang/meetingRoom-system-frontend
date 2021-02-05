@@ -159,6 +159,8 @@
       },
       // 查询
       query() {
+        this.formInline.page = 1
+        this.formInline.pageSize = 10
         this.getApproveList()
       },
       // 每页条数改变

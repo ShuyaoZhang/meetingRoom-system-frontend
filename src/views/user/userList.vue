@@ -121,6 +121,8 @@
       },
       // 查询
       query() {
+        this.formInline.page = 1
+        this.formInline.pageSize = 10
         this.getUserList()
       },
       // 每页条数改变

@@ -87,7 +87,6 @@
     export default {
         data() {
             return {
-                type: '',
                 formInline: { // 查询关键字段
                     page: 1,
                     pageSize: 10
@@ -189,7 +188,7 @@
             sure() {
                 this.$refs['form'].validate((valid) => {
                     if (valid) {
-                        let params = Object.assign({}, this.form,this.getRowByArr(this.equipment))
+                        let params = Object.assign({}, this.form, this.getRowByArr(this.equipment))
                         console.log(params)
                         //let request = this.dialogType == 1 ? 
                     }
@@ -206,10 +205,10 @@
                 return arr
             },
             // 根据数组返回row
-            getRowByArr(arr){
+            getRowByArr(arr) {
                 var obj = {}
                 for (let i = 0; i < this.projectorList.length; i++) {
-                    obj[this.projectorList[i].field] = arr.includes(i+1) ? 1 : 0
+                    obj[this.projectorList[i].field] = arr.includes(i + 1) ? 1 : 0
                 }
                 return obj
             },
@@ -228,6 +227,8 @@
             },
             // 查询
             query() {
+                this.formInline.page = 1
+                this.formInline.pageSize = 10
                 this.getRoomList()
             },
             // 每页条数改变
