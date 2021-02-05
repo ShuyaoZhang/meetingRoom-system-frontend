@@ -9,6 +9,23 @@
       </div>
     </div>
     <div class="approve-topic">审批信息</div>
+    <div class="approve-info">
+      <div v-if="!approveResult">
+        <el-radio-group v-model="approveResultStaging">
+          <el-radio :label="1">通过</el-radio>
+          <el-radio :label="2">驳回</el-radio>
+        </el-radio-group><br />
+        <el-input placeholder="请输入驳回原因" size="small" v-model="rejectReason" clearable v-if="approveResultStaging == 2"
+          class="reason-input"></el-input><br />
+        <el-button type="primary" size="small" style="float:right" @click="approveSure">确定</el-button>
+      </div>
+      <div v-if="approveResult" class="approve-image">
+        <img v-if="approveResult == 1" src="../../assets/images/pass.png" />
+        <img v-if="approveResult == 2" src="../../assets/images/reject.png" />
+        <div>{{approveResult == 1 ? '审批通过' : '审批驳回'}}</div>
+        <div v-if="approveResult == 2">驳回原因：{{rejectReason}}</div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -23,7 +40,7 @@
           title: '会议主题',
           icon: 'el-icon-star-off',
           value: ''
-        },{
+        }, {
           title: '会议室名称',
           icon: 'el-icon-house',
           value: ''
@@ -47,7 +64,10 @@
           title: '会议室设备',
           icon: 'el-icon-data-analysis',
           value: ''
-        }]
+        }],
+        approveResult: 0, // 审批结果（0：等待审批、1：审批通过:2：审批驳回）
+        approveResultStaging: 1, // 审批结果暂存（1：审批通过:2：审批驳回）
+        rejectReason: '', // 驳回原因
       }
     },
     created() {
@@ -62,7 +82,12 @@
       this.approveDetail[7].value = '投影仪、黑板'
     },
     computed: {},
-    methods: {},
+    methods: {
+      // 审批确定
+      approveSure() {
+        this.approveResult = this.approveResultStaging
+      }
+    },
   }
 </script>
 <style lang="scss" scoped>
@@ -74,9 +99,9 @@
     background: #f0f2f5;
   }
 
-  .approve-topic{
+  .approve-topic {
     border-left: 2px solid #4135DD;
-    margin: 10px 10px;
+    margin: 30px 10px 10px;
     height: 28px;
     font-size: 16px;
     font-weight: 600;
@@ -84,29 +109,52 @@
     padding-left: 10px;
   }
 
-  .approve-form{
+  .approve-form {
     padding: 0 30px 0 10px;
-    
-    .approve-item{
+
+    .approve-item {
       line-height: 40px;
       display: flex;
-      border-bottom:1px solid #DCDFE6;
+      border-bottom: 1px solid #DCDFE6;
     }
 
-    .approve-title{
+    .approve-title {
       font-size: 16px;
       font-weight: 600;
-      color:#17233d;
-      width:35%;
+      color: #17233d;
+      width: 35%;
     }
 
-    .approve-icon{
-     margin-right:5px;
+    .approve-icon {
+      margin-right: 5px;
     }
 
-    .approve-value{
+    .approve-value {
       font-size: 14px;
-      
+      color: #606266;
+    }
+  }
+
+  .approve-info {
+    padding-left: 10px;
+    padding-right: 30px;
+
+    .reason-input{
+      width: 500px;
+      margin:10px 0;
+    }
+
+    .approve-image {
+      height: 150px;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      color: #606266;
+    }
+
+    img {
+      width: 200px;
+      height: 100%;
     }
   }
 
@@ -118,7 +166,7 @@
     color: #fff;
     text-align: center;
     padding: 10px 20px;
-    margin: 20px auto 40px;
+    margin: 20px auto 30px;
     border-radius: 2px;
   }
 
