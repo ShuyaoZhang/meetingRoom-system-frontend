@@ -1,10 +1,6 @@
 // 公共函数
-/**
- * Parse the time to string
- * @param {(Object|string|number)} time
- * @param {string} cFormat
- * @returns {string | null}
- */
+
+// 日期格式化
 export function parseTime(time, cFormat) {
   if (arguments.length === 0 || !time) {
     return null
@@ -46,49 +42,7 @@ export function parseTime(time, cFormat) {
   return time_str
 }
 
-/**
- * @param {number} time
- * @param {string} option
- * @returns {string}
- */
-export function formatTime(time, option) {
-  if (('' + time).length === 10) {
-    time = parseInt(time) * 1000
-  } else {
-    time = +time
-  }
-  const d = new Date(time)
-  const now = Date.now()
-
-  const diff = (now - d) / 1000
-
-  if (diff < 30) {
-    return '刚刚'
-  } else if (diff < 3600) {
-    // less 1 hour
-    return Math.ceil(diff / 60) + '分钟前'
-  } else if (diff < 3600 * 24) {
-    return Math.ceil(diff / 3600) + '小时前'
-  } else if (diff < 3600 * 24 * 2) {
-    return '1天前'
-  }
-  if (option) {
-    return parseTime(time, option)
-  } else {
-    return (
-      d.getMonth() +
-      1 +
-      '月' +
-      d.getDate() +
-      '日' +
-      d.getHours() +
-      '时' +
-      d.getMinutes() +
-      '分'
-    )
-  }
-}
-
+// 获取相对今天的时间
 export function getDate(time, AddDayCount) {
   let date = new Date(time);
   date.setDate(date.getDate() + AddDayCount); //获取AddDayCount天后的日期
@@ -104,6 +58,28 @@ export function getDate(time, AddDayCount) {
   }
   let currentDate = year + seperator1 + month + seperator1 + strDate;
   return currentDate;
+}
+
+// 获取近一周（星期一、星期二）
+export function getLastlyWeek() {
+  var weekList = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', ]
+  var day = new Date().getDay()
+  var weekArr = []
+  for (let i = 1; i <= 7; i++) {
+    weekArr.push(weekList[(day + i) % 7])
+  }
+  return weekArr
+}
+
+// 获取近一月
+export function getLastlyMonth() {
+  var date = new Date()
+  date.setDate(date.getDate() - 30) // 获取一个月前的时间戳
+  var monthArr = []
+  for (let i = 0; i < 30; i++) {
+    monthArr.push(getDate(date,i))
+  }
+  return monthArr
 }
 
 /**
@@ -128,22 +104,98 @@ export function param2Obj(url) {
   return obj
 }
 
-export const buildingList = [
-  {id:1,buildingName: '教学楼'},
-  {id:2,buildingName: '图书馆'},
-  {id:3,buildingName: '行政楼'},
-  {id:4,buildingName: '宿舍楼'},
+// 防抖
+export function debounce(func, wait, immediate) {
+  let timeout, args, context, timestamp, result
+
+  const later = function () {
+    // 据上一次触发时间间隔
+    const last = +new Date() - timestamp
+
+    // 上次被包装函数被调用时间间隔 last 小于设定时间间隔 wait
+    if (last < wait && last > 0) {
+      timeout = setTimeout(later, wait - last)
+    } else {
+      timeout = null
+      // 如果设定为immediate===true，因为开始边界已经调用过了此处无需调用
+      if (!immediate) {
+        result = func.apply(context, args)
+        if (!timeout) context = args = null
+      }
+    }
+  }
+
+  return function (...args) {
+    context = this
+    timestamp = +new Date()
+    const callNow = immediate && !timeout
+    // 如果延时不存在，重新设定延时
+    if (!timeout) timeout = setTimeout(later, wait)
+    if (callNow) {
+      result = func.apply(context, args)
+      context = args = null
+    }
+
+    return result
+  }
+}
+
+// 建筑楼列表
+export const buildingList = [{
+    id: 1,
+    buildingName: '教学楼'
+  },
+  {
+    id: 2,
+    buildingName: '图书馆'
+  },
+  {
+    id: 3,
+    buildingName: '行政楼'
+  },
+  {
+    id: 4,
+    buildingName: '宿舍楼'
+  },
 ]
 
-export const projectorList = [
-  {id:1,projectorName: '投影仪',field:'projector'},
-  {id:2,projectorName: '显示屏',field:'display'},
-  {id:3,projectorName: '黑板',field:'blackboard'},
-  {id:4,projectorName: '白板',field:'whiteboard'},
+// 会议室设备列表
+export const projectorList = [{
+    id: 1,
+    projectorName: '投影仪',
+    field: 'projector'
+  },
+  {
+    id: 2,
+    projectorName: '显示屏',
+    field: 'display'
+  },
+  {
+    id: 3,
+    projectorName: '黑板',
+    field: 'blackboard'
+  },
+  {
+    id: 4,
+    projectorName: '白板',
+    field: 'whiteboard'
+  },
 ]
 
-export const statusList = [
-  {id:1,statusName: '通过',adminName:'已通过'},
-  {id:2,statusName: '驳回',adminName:'已驳回'},
-  {id:0,statusName: '未审批',adminName:'立即处理'}
+// 预订状态
+export const statusList = [{
+    id: 1,
+    statusName: '通过',
+    adminName: '已通过'
+  },
+  {
+    id: 2,
+    statusName: '驳回',
+    adminName: '已驳回'
+  },
+  {
+    id: 0,
+    statusName: '未审批',
+    adminName: '立即处理'
+  }
 ]
