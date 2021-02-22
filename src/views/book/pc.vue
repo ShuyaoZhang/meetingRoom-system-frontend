@@ -6,24 +6,32 @@
       <el-step title="3：等候审批" icon="el-icon-loading"></el-step>
     </el-steps>
     <div class="bookForm" v-if="stepActive==1">
-      <el-form ref="form" :model="form" label-width="100px" size="small">
-        <el-form-item label="日期：">
-          <el-date-picker type="date" v-model="form.date"></el-date-picker>
+      <el-form ref="form" :model="form" :rules="formRules" label-width="100px" size="small">
+        <el-form-item label="日期：" prop="date">
+          <el-date-picker type="date" v-model="form.date" value-format="yyyy-MM-dd" format="yyyy-MM-dd">
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="起止时间：">
-          <el-time-picker is-range v-model="form.time" range-separator="至"></el-time-picker>
+        <el-form-item label="起止时间：" prop="time">
+          <el-time-picker is-range v-model="form.time" range-separator="至" value-format="hh:mm" format="hh:mm">
+          </el-time-picker>
         </el-form-item>
-        <el-form-item label="参会人数：">
-          <el-input-number v-model="form.num" :min="1" :max="200"></el-input-number>
+        <el-form-item label="参会人数：" prop="num">
+          <el-input-number v-model="form.num" :min="2" :max="200"></el-input-number>
         </el-form-item>
-        <el-form-item label="会议主题：">
+        <el-form-item label="会议主题：" prop="meetingTheme">
           <el-input placeholder="请输入会议主题" v-model="form.meetingTheme" clearable style="width:500px"></el-input>
         </el-form-item>
-        <el-form-item label="选择设备：" prop="equipment">
+        <el-form-item label="选择设备：">
           <el-checkbox-group v-model="equipment">
             <el-checkbox v-for="(item,index) in projectorList" :label="item.id" :key="item.id">
               {{item.projectorName}}</el-checkbox>
           </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="选择建筑楼：" prop="building">
+          <el-select v-model="form.building" clearable placeholder="请选择" size="small">
+            <el-option v-for="item in buildingList" :label="item.buildingName" :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button @click="query" type="primary" icon="el-icon-search">查询会议室</el-button>
@@ -33,7 +41,7 @@
     <div class="bookForm" v-if="stepActive==2">
       <span class="bookTitle">选择会议室：</span>
       <el-select v-model="form.roomId" clearable placeholder="请选择" size="small">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+        <el-option v-for="item in roomList" :label="item.roomName" :value="item.id">
         </el-option>
       </el-select>
       <div class="bookButton">
@@ -41,48 +49,88 @@
         <el-button @click="sure" type="primary" icon="el-icon-circle-check" size="small">预订会议室</el-button>
       </div>
     </div>
+    <div class="bookSuccess" v-if="stepActive==3">
+      <img src="@/assets/images/success.png"><br/>
+      预订成功，请等待管理员审批！
+    </div>
   </div>
 </template>
 <script>
   import {
     buildingList,
-    projectorList
+    projectorList,
+    parseTime
   } from '@/utils/index.js'
   export default {
     data() {
       return {
         buildingList: buildingList,
         projectorList: projectorList,
+        roomList: [], // 可选会议室列表
         stepActive: 1, // 当前步骤
-        form: {}, // 预订表单
-        equipment:[],
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
+        form: { // 预订表单
+          date: parseTime(new Date(), '{y}-{m}-{d}'),
+          time: [parseTime(new Date(), '{h}:{i}'), parseTime(new Date(), '{h}:{i}')],
+          num: 2,
+          meetingTheme: '',
+          building: '',
+          roomId: ''
+        },
+        equipment: [], // 设备选项
+        formRules: {
+          date: [{
+            required: true,
+            message: '请选择日期',
+            trigger: 'change'
+          }],
+          time: [{
+            type: 'array',
+            required: true,
+            message: '请选择起止时间',
+            trigger: 'change'
+          }],
+          num: [{
+            required: true,
+            message: '请输入参会人数',
+            trigger: 'change'
+          }],
+          meetingTheme: [{
+            required: true,
+            message: '请输入会议主题',
+            trigger: 'change'
+          }]
+        }
       }
     },
-    created() {},
+    mounted() {
+
+    },
     computed: {},
     methods: {
       // 查询会议室
       query() {
-        this.stepActive = 2
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            let params = {
+              ...this.form,
+              equipment: this.equipment,
+              startTime: this.form.time[0],
+              endTime: this.form.time[1],
+            }
+            console.log(params)
+            this.stepActive = 2
+          }
+        });
       },
       // 预订会议室
       sure() {
+        let params = {
+          ...this.form,
+          equipment: this.equipment,
+          startTime: this.form.time[0],
+          endTime: this.form.time[1],
+        }
+        console.log(params)
         this.stepActive = 3
       },
       // 返回上一步
@@ -106,5 +154,16 @@
 
   .bookButton {
     margin: 30px 0 0 80px;
+  }
+
+  .bookSuccess{
+    text-align: center;
+    font-size: 16px;
+    color:#909399;
+
+    img{
+      width:200px;
+      height:200px;
+    }
   }
 </style>
