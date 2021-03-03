@@ -1,5 +1,6 @@
 # meetingRoom-system-frontend
 校园校园会议室管理系统——前端，同时存在移动端和PC端，寻找移动PC同时存在的适配方法。
+采用Vue.js框架，引入Element.ui和Vant.ui两大组件库。
 
 ### 移动端页面
 - 登录、注册
