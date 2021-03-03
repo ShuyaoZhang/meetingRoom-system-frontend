@@ -37,7 +37,7 @@
           icon: 'el-icon-time',
           value: 'time'
         },{
-          title: '会议室地点',
+          title: '会议地点',
           icon: 'el-icon-location-outline',
           value: 'location'
         }, {
@@ -45,7 +45,7 @@
           icon: 'el-icon-help',
           value: 'meetingNum'
         }, {
-          title: '会议室设备',
+          title: '设备',
           icon: 'el-icon-data-analysis',
           value: 'equipment'
         }],
@@ -72,6 +72,7 @@
     font-size: 16px;
     line-height: 50px;
     text-align: center;
+    border-radius:2px 2px 0 0;
   }
 
   .record-form {
@@ -87,7 +88,7 @@
       font-size: 15px;
       font-weight: 600;
       color: #17233d;
-      width: 35%;
+      width: 40%;
     }
 
     .record-icon {

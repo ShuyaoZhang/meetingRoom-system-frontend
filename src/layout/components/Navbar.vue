@@ -8,7 +8,7 @@
       <el-dropdown class="avatar-container" trigger="hover">
         <div class="avatar-wrapper">
           <span class="user-name">{{name}}</span>
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -49,7 +49,7 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      this.$router.push(`/pcLogin?redirect=${this.$route.fullPath}`)
     }
   }
 }

@@ -8,13 +8,9 @@
         <img class="pic-404__child right" src="@/assets/404_images/404_cloud.png" alt="404">
       </div>
       <div class="bullshit">
-        <div class="bullshit__oops">OOPS!</div>
-        <div class="bullshit__info">All rights reserved
-          <a style="color:#20a0ff" href="https://wallstreetcn.com" target="_blank">wallstreetcn</a>
-        </div>
-        <div class="bullshit__headline">{{ message }}</div>
-        <div class="bullshit__info">Please check that the URL you entered is correct, or click the button below to return to the homepage.</div>
-        <a href="" class="bullshit__return-home">Back to home</a>
+        <div class="bullshit__oops">NO FOUND</div>
+        <div class="bullshit__info">很抱歉，你访问的页面不存在！</div>
+        <a href="/#/pcBook" class="bullshit__return-home">回主页</a>
       </div>
     </div>
   </div>
@@ -24,11 +20,6 @@
 
 export default {
   name: 'Page404',
-  computed: {
-    message() {
-      return 'The webmaster said that you can not enter this page...'
-    }
-  }
 }
 </script>
 
@@ -36,7 +27,7 @@ export default {
 .wscn-http404-container{
   transform: translate(-50%,-50%);
   position: absolute;
-  top: 40%;
+  top: 35%;
   left: 50%;
 }
 .wscn-http404 {
@@ -161,6 +152,7 @@ export default {
     width: 300px;
     padding: 30px 0;
     overflow: hidden;
+    margin-top: 60px;
     &__oops {
       font-size: 32px;
       font-weight: bold;
@@ -185,7 +177,7 @@ export default {
       animation-fill-mode: forwards;
     }
     &__info {
-      font-size: 13px;
+      font-size: 15px;
       line-height: 21px;
       color: grey;
       opacity: 0;

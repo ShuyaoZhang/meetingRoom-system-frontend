@@ -92,7 +92,7 @@
             this.loading = true
             this.$store.dispatch('user/login', this.loginForm).then(() => {
               this.$router.push({
-                path: this.redirect || '/'
+                path: this.redirect || '/pcBook'
               })
               this.loading = false
             }).catch(() => {

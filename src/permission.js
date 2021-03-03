@@ -4,23 +4,27 @@ import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth' 
 import getPageTitle from '@/utils/get-page-title'
 
-const whiteList = ['/pcLogin','/mobileLogin','/pcRegister'] 
+const whiteList = ['/pcLogin','/mobileLogin','/pcRegister','/404'] 
 
 router.beforeEach(async(to, from, next) => {
   document.title = getPageTitle(to.meta.title)
   const hasToken = getToken()
   next()
-  // if (hasToken) {
+
+
+  // if (hasToken) {// 已登录
   //   if (to.path === '/pcLogin') {
-  //     next({ path: '/' })
+  //     next({ path: '/pcBook' })
   //   } else {
-  //     const hasGetUserInfo = store.getters.name
-  //     if (hasGetUserInfo) {
+  //     const hasUserRole = store.getters.role
+  //     if (hasUserRole) {
   //       next()
   //     } else {
   //       try {
-  //         await store.dispatch('user/getInfo')
-  //         next()
+  //         const { role } = await store.dispatch('user/getInfo')
+  //         const accessRoutes = await store.dispatch('user/generateRoutes', role)
+  //         router.addRoutes(accessRoutes)
+  //         next({ ...to, replace: true })
   //       } catch (error) {
   //         await store.dispatch('user/resetToken')
   //         Message.error(error || 'Has Error')
@@ -28,7 +32,7 @@ router.beforeEach(async(to, from, next) => {
   //       }
   //     }
   //   }
-  // } else {
+  // } else {// 未登录
   //   if (whiteList.indexOf(to.path) !== -1) {
   //     next()
   //   } else {

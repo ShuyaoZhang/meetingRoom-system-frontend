@@ -7,24 +7,23 @@ import Layout from '@/layout'
 import mobileLayout from '@/mobileLayout'
 
 /**
- * Note: sub-menu only appear when route children.length >= 1
- *
  * hidden: true                   if set true, item will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
  * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
+    roles: ['admin','commonUser']    control the page roles (you can set multiple roles)
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
     icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
   }
  */
 
+ // 普通路由
 export const constantRoutes = [{
+    path: '/',
+    redirect: '/pcLogin',
+    hidden: true
+  },
+  {
     path: '/pcLogin',
     component: () => import('@/views/login/pc'),
     hidden: true
@@ -44,7 +43,6 @@ export const constantRoutes = [{
     component: () => import('@/views/404'),
     hidden: true
   },
-
   {
     path: '/mobileIndex',
     component: mobileLayout,
@@ -55,7 +53,6 @@ export const constantRoutes = [{
     }],
     hidden: true
   },
-
   {
     path: '/mobileBook',
     component: mobileLayout,
@@ -66,7 +63,6 @@ export const constantRoutes = [{
     }],
     hidden: true
   },
-
   {
     path: '/mobileMeeting',
     component: mobileLayout,
@@ -77,7 +73,6 @@ export const constantRoutes = [{
     }],
     hidden: true
   },
-
   {
     path: '/mobileRecord',
     component: mobileLayout,
@@ -91,28 +86,17 @@ export const constantRoutes = [{
       component: () => import('@/views/detail/mobile')
     }],
     hidden: true
-  },
+  }
+]
 
-  // {
-  //   path: '/',
-  //   component: Layout,
-  //   children: [{
-  //     path: 'dashboard',
-  //     name: 'Dashboard',
-  //     component: () => import('@/views/dashboard/index'),
-  //     meta: {
-  //       title: 'Dashboard',
-  //       icon: 'dashboard'
-  //     }
-  //   }]
-  // },
-
-  {
+// 权限路由
+export const asyncRoutes = [{
     path: '/pcBook',
     component: Layout,
     meta: {
       title: '预订',
-      icon: 'pcBook'
+      icon: 'pcBook',
+      roles: [1, 0]
     },
     children: [{
       path: '',
@@ -138,7 +122,8 @@ export const constantRoutes = [{
     component: Layout,
     meta: {
       title: '会议室管理',
-      icon: 'manage'
+      icon: 'manage',
+      roles: [1]
     },
     children: [{
       path: 'config',
@@ -156,11 +141,11 @@ export const constantRoutes = [{
         title: '预订审批',
         icon: 'approve'
       }
-    },{
+    }, {
       path: 'approveDetail',
       name: 'approveDetail',
       component: () => import('@/views/manage/approveDetail'),
-      hidden: true ,
+      hidden: true,
       meta: {
         title: '预订审批',
         icon: 'approve'
@@ -189,7 +174,8 @@ export const constantRoutes = [{
     component: Layout,
     meta: {
       title: '用户管理',
-      icon: 'user'
+      icon: 'user',
+      roles: ['admin']
     },
     children: [{
       path: 'userList',

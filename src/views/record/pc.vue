@@ -106,16 +106,16 @@
           time: '',
           equipment: '',
           roomBuilding: 4,
-          roomLocation: '1101',
-          date: '2020年11月15日',
-          startTime: '13:00',
-          endTime: '14:10',
-          meetingNum: 15,
-          meetingTheme: '后台管理项目分享会',
-          projector: 1,
-          display: 0,
-          whiteboard: 1,
-          blackboard: 1,
+          roomLocation: '8101',
+          date: '1020年11月15日',
+          startTime: '15:00',
+          endTime: '16:10',
+          meetingNum: 115,
+          meetingTheme: '11231后台',
+          projector: 0,
+          display: 1,
+          whiteboard: 0,
+          blackboard: 0,
         }]
         this.total = this.recordList.length
         this.changeFormat()
@@ -125,7 +125,7 @@
         let str = ''
         for (let i = 0; i < this.total; i++) {
           str = ''
-          this.recordList[i].location = this.buildingList.find((ele)=>{return ele.id = this.recordList[i].roomBuilding})['buildingName'] +  this.recordList[i].roomLocation
+          this.recordList[i].location = this.buildingList.find((ele)=>{return ele.id == this.recordList[i].roomBuilding}).buildingName+  this.recordList[i].roomLocation
           this.recordList[i].time = this.recordList[i].startTime + ' ~ ' + this.recordList[i].endTime
           str = (this.recordList[i].projector) ? '投影仪、' : ''
           str += (this.recordList[i].display) ? '显示屏、' : ''
