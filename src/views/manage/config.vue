@@ -44,7 +44,7 @@
             layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
 
-        <el-dialog :title="dialogType==1? '新增会议室' : '编辑会议室'" :visible.sync="dialogVisible" width="25%">
+        <el-dialog :title="dialogType==1? '新增会议室' : '编辑会议室'" :visible.sync="dialogVisible" width="500px">
             <div class="dialog-img">
                 <img src="@/assets/images/add.png" v-if="dialogType==1">
                 <img src="@/assets/images/edit.png" v-if="dialogType==2">
