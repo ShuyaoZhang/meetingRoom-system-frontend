@@ -45,6 +45,8 @@
 </template>
 
 <script>
+  import md5 from 'js-md5'
+  import {register} from '@/api/user/index'
   export default {
     name: 'register',
     data() {
@@ -66,17 +68,17 @@
         registerRules: {
           username: [{
             required: true,
-            trigger: 'blur',
+            trigger: 'change',
             message: '用户名不能为空！'
           }],
           password: [{
             required: true,
-            trigger: 'blur',
+            trigger: 'change',
             message: '密码不能为空！'
           }],
           surePassword: [{
             required: true,
-            trigger: 'blur',
+            trigger: 'change',
             validator: validatePassword
           }]
         },
@@ -119,14 +121,16 @@
           this.$router.push('pcLogin')
         }
       },
-      handleLogin() {
+      handleRegister() {
         this.$refs.registerForm.validate(valid => {
           if (valid) {
             this.loading = true
-            this.$store.dispatch('user/login', this.loginForm).then(() => {
-              this.$router.push({
-                path: this.redirect || '/'
-              })
+            let param = {
+              username:this.registerForm.username,
+              password:md5(this.registerForm.password)
+            }
+            register(param).then((res) => {
+              this.$message.success('注册成功！');
               this.loading = false
             }).catch(() => {
               this.loading = false

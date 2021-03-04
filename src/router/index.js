@@ -86,7 +86,25 @@ export const constantRoutes = [{
       component: () => import('@/views/detail/mobile')
     }],
     hidden: true
-  }
+  },
+  {
+    path: '/user',
+    component: Layout,
+    meta: {
+      title: '用户管理',
+      icon: 'user',
+      roles: ['admin']
+    },
+    children: [{
+      path: 'userList',
+      name: 'userList',
+      component: () => import('@/views/user/userList'),
+      meta: {
+        title: '用户列表',
+        icon: 'userList'
+      }
+    }],
+  },
 ]
 
 // 权限路由

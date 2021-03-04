@@ -7,7 +7,7 @@
       <el-form-item label="用户角色：">
         <el-select v-model="formInline.role" placeholder="请选择用户角色" clearable>
           <el-option label="管理员" value="1"></el-option>
-          <el-option label="普通用户" value="2"></el-option>
+          <el-option label="普通用户" value="0"></el-option>
         </el-select>
         <el-button type="primary" icon="el-icon-search" @click="query" class="query-button">查询</el-button>
       </el-form-item>
@@ -16,12 +16,12 @@
     <el-table v-loading="listLoading" :data="tableData" :cell-style="{padding:'2px'}"
       :header-cell-style="{background:'#f8f8f9',color:'#333','font-weight': '600'}">
       <el-table-column v-for="item in columns" :prop="item.prop" :label="item.label" align="center"></el-table-column>
-      <el-table-column prop="role" label="用户角色">
+      <el-table-column prop="role" label="用户角色" align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.role == 1 ? 'warning' : 'primary'">{{scope.row.role == 1 ? '管理员' : '普通用户'}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-refresh" @click="updateRole(scope.row)">
             {{scope.row.role == 1 ? '移除管理员' : '设为管理员'}}</el-button>
@@ -36,6 +36,11 @@
   </div>
 </template>
 <script>
+  import {
+    userList,
+    userDelete,
+    userUpdate
+  } from '@/api/user/index'
   export default {
     data() {
       return {
@@ -58,6 +63,10 @@
           {
             label: '创建时间',
             prop: 'created_at',
+          },
+          {
+            label: '更新时间',
+            prop: 'updated_at',
           }
         ]
       }
@@ -69,29 +78,11 @@
       // 获取用户列表
       getUserList() {
         this.listLoading = true
-        this.tableData = [{
-          created_at: '2016-05-02 21:12:21',
-          username: '王小虎',
-          id: 1,
-          role: 1,
-        }, {
-          created_at: '2016-05-02 21:12:21',
-          username: '王小虎',
-          id: 2,
-          role: 2
-        }, {
-          created_at: '2016-05-02 21:12:21',
-          username: '王小虎',
-          id: 3,
-          role: 2,
-        }, {
-          created_at: '2016-05-02 21:12:21',
-          username: '王小虎',
-          id: 4,
-          role: 1,
-        }]
-        this.listLoading = false
-        this.total = 32
+        userList(this.formInline).then(res => {
+          this.tableData = res.data.list
+          this.total = res.data.count
+          this.listLoading = false
+        })
       },
       // 更新用户名
       updateRole(row) {
@@ -100,10 +91,16 @@
           cancelButtonText: '取消',
           iconClass: 'el-icon-warning colorRed'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '成功!'
-          });
+          userUpdate({
+            id: row.id,
+            role:row.role==1 ? 0 : 1
+          }).then(res => {
+            this.$message({
+              type: 'success',
+              message: '更新成功!'
+            });
+            this.getUserList()
+          })
         }).catch(err => {});
       },
       // 更新用户名
@@ -113,10 +110,15 @@
           cancelButtonText: '取消',
           iconClass: 'el-icon-warning colorRed'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '成功!'
-          });
+          userDelete({
+            id: row.id
+          }).then(res => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.getUserList()
+          })
         }).catch(err => {});
       },
       // 查询

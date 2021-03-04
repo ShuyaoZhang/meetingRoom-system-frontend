@@ -34,6 +34,7 @@
 </template>
 
 <script>
+  import md5 from 'js-md5'
   export default {
     name: 'Login',
     data() {
@@ -45,12 +46,12 @@
         loginRules: {
           username: [{
             required: true,
-            trigger: 'blur',
+            trigger: 'change',
             message: '用户名不能为空！'
           }],
           password: [{
             required: true,
-            trigger: 'blur',
+            trigger: 'change',
             message: '密码不能为空！'
           }]
         },
@@ -90,7 +91,11 @@
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             this.loading = true
-            this.$store.dispatch('user/login', this.loginForm).then(() => {
+            let param = {
+              username:this.loginForm.username,
+              password:md5(this.loginForm.password)
+            }
+            this.$store.dispatch('user/login',param).then(() => {
               this.$router.push({
                 path: this.redirect || '/pcBook'
               })

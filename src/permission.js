@@ -11,7 +11,6 @@ router.beforeEach(async(to, from, next) => {
   const hasToken = getToken()
   next()
 
-
   // if (hasToken) {// 已登录
   //   if (to.path === '/pcLogin') {
   //     next({ path: '/pcBook' })

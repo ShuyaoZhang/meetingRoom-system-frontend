@@ -39,7 +39,9 @@
 <script>
   import {
     Notify
-  } from 'vant';
+  } from 'vant'
+  import md5 from 'js-md5'
+  import {register} from '@/api/user/index'
   export default {
     name: 'login',
     components: {
@@ -121,7 +123,7 @@
           if (this.switch == 1) { // 登录
             let params = {
               username: this.username,
-              password: this.password
+              password: md5(this.password)
             }
             this.$store.dispatch('user/login', params).then(() => {
               this.$router.push({
@@ -131,14 +133,12 @@
           } else { // 注册
             let params = {
               username: this.username,
-              password: this.password,
-              surePassword: this.surePassword
+              password: md5(this.password)
             }
-            this.$store.dispatch('user/register', params).then(() => {
-              this.$router.push({
-                path: 'mobileLogin'
-              })
-            })
+            register(params).then((res) => {
+              this.$message.success('注册成功！');
+            }).catch(() => {
+            })          
           }
         }
       }
