@@ -105,6 +105,57 @@ export const constantRoutes = [{
       }
     }],
   },
+  {
+    path: '/manage',
+    component: Layout,
+    meta: {
+      title: '会议室管理',
+      icon: 'manage',
+      roles: [1]
+    },
+    children: [{
+      path: 'config',
+      name: 'config',
+      component: () => import('@/views/manage/config'),
+      meta: {
+        title: '会议室配置',
+        icon: 'config'
+      }
+    }, {
+      path: 'approve',
+      name: 'approve',
+      component: () => import('@/views/manage/approve'),
+      meta: {
+        title: '预订审批',
+        icon: 'approve'
+      }
+    }, {
+      path: 'approveDetail',
+      name: 'approveDetail',
+      component: () => import('@/views/manage/approveDetail'),
+      hidden: true,
+      meta: {
+        title: '预订审批',
+        icon: 'approve'
+      }
+    }, {
+      path: 'bookList',
+      name: 'bookList',
+      component: () => import('@/views/manage/bookList'),
+      meta: {
+        title: '预订列表',
+        icon: 'bookList'
+      }
+    }, {
+      path: 'statistics',
+      name: 'statistics',
+      component: () => import('@/views/manage/statistics'),
+      meta: {
+        title: '统计分析',
+        icon: 'statistics'
+      }
+    }],
+  },
 ]
 
 // 权限路由

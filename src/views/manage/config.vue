@@ -84,6 +84,12 @@
         buildingList,
         projectorList
     } from '@/utils/index.js'
+    import {
+        roomList,
+        roomAdd,
+        roomUpdate,
+        roomDelete
+    } from '@/api/manage/config.js'
     export default {
         data() {
             return {
@@ -141,29 +147,11 @@
             // 获取会议室列表
             getRoomList() {
                 this.listLoading = true
-                this.tableData = [{
-                    id: 1,
-                    roomName: '王小虎',
-                    roomNum: 12,
-                    roomLocation: '110',
-                    projector: 1,
-                    display: 0,
-                    whiteboard: 1,
-                    blackboard: 1,
-                    building: 1,
-                }, {
-                    id: 2,
-                    roomName: '王小虎',
-                    roomNum: 12,
-                    roomLocation: '110',
-                    projector: 0,
-                    display: 1,
-                    whiteboard: 0,
-                    blackboard: 1,
-                    building: 2
-                }, ]
-                this.listLoading = false
-                this.total = 32
+                roomList(this.formInline).then(res => {
+                    this.tableData = res.data.list
+                    this.total = res.data.count
+                    this.listLoading = false
+                })
             },
             // 新增
             add() {
@@ -189,8 +177,15 @@
                 this.$refs['form'].validate((valid) => {
                     if (valid) {
                         let params = Object.assign({}, this.form, this.getRowByArr(this.equipment))
-                        console.log(params)
-                        //let request = this.dialogType == 1 ? 
+                        let request = this.dialogType == 1 ? roomAdd : roomUpdate
+                        request(params).then(res => {
+                            this.$message({
+                                type: 'success',
+                                message: '成功!'
+                            });
+                            this.getRoomList()
+                            this.dialogVisible = false
+                        })
                     }
                 })
             },
@@ -219,10 +214,15 @@
                     cancelButtonText: '取消',
                     iconClass: 'el-icon-warning colorRed'
                 }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '成功!'
-                    });
+                    roomDelete({
+                        id: row.id
+                    }).then(res => {
+                        this.$message({
+                            type: 'success',
+                            message: '成功!'
+                        });
+                        this.getRoomList()
+                    })
                 }).catch(err => {});
             },
             // 查询
