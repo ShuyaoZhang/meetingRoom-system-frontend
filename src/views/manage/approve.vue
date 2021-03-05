@@ -14,14 +14,15 @@
         <div class="approve-box" @click="goDetail(item)">
           <div class="box-header bg-blur"></div>
           <div class="box-main">
-            <div class="box-title">{{item.roomBuilding |change(buildingList,'id','buildingName')}}{{item.roomName}}
+            <div class="box-title">{{item.building |change(buildingList,'id','buildingName')}}{{item.roomName}}
             </div>
             <div class="box-item"><i class="el-icon-user-solid box-icon"></i>{{item.bookPerson}}</div>
             <div class="box-item"><i class="el-icon-star-on box-icon"></i>{{item.meetingTheme}}</div>
-            <div class="box-item"><i class="el-icon-s-help box-icon"></i>{{item.date}}
+            <div class="box-item"><i class="el-icon-s-help box-icon"></i>{{item.meetingDate}}
               {{item.startTime}}~{{item.endTime}}</div>
-            <div class="box-status" :style="{color:item.status==1? '#67C23A' : item.status==2? '#F56C6C' : '#4135DD'}">
-              {{item.status | change(statusList,'id','adminName')}}</div>
+            <div class="box-status"
+              :style="{color:item.approveResult==1? '#67C23A' : item.approveResult==2? '#F56C6C' : '#4135DD'}">
+              {{item.approveResult | change(statusList,'id','adminName')}}</div>
           </div>
         </div>
       </el-col>
@@ -38,10 +39,16 @@
     buildingList,
     statusList
   } from '@/utils/index.js'
+  import {
+    meetingList
+  } from '@/api/manage/bookList.js'
   export default {
     data() {
       return {
-        formInline: {}, // 查询条件
+        formInline: {// 查询条件
+          page:1,
+          pageSize:8
+        }, 
         total: 0, // 总条数
         buildingList: buildingList,
         statusList: statusList,
@@ -54,105 +61,13 @@
     methods: {
       // 获取审批列表
       getApproveList() {
-        this.total = 32
-        this.approveList = [{
-            id: 1,
-            roomName: '雅兰阁',
-            roomBuilding: 1,
-            roomLocation: '1101',
-            date: '2020年11月15日',
-            startTime: '13:00',
-            endTime: '14:10',
-            meetingNum: 15,
-            meetingTheme: '后台管理项目分享会',
-            bookPerson: '黄佳佳',
-            projector: 1,
-            display: 0,
-            whiteboard: 1,
-            status: 2
-          },
-          {
-            id: 1,
-            roomName: '雅兰阁',
-            roomBuilding: 1,
-            roomLocation: '1101',
-            date: '2020年11月15日',
-            startTime: '13:00',
-            endTime: '14:10',
-            meetingNum: 15,
-            meetingTheme: '后台管理项',
-            projector: 0,
-            display: 0,
-            whiteboard: 1,
-            status: 1
-          },
-          {
-            id: 1,
-            roomName: '雅兰阁',
-            roomBuilding: 1,
-            roomLocation: '1101',
-            date: '2020年11月15日',
-            startTime: '13:00',
-            endTime: '14:10',
-            meetingNum: 15,
-            meetingTheme: '后台管理项目分享会',
-            bookPerson: '黄佳佳',
-            projector: 1,
-            display: 0,
-            whiteboard: 1,
-            status: 2
-          },
-          {
-            id: 1,
-            roomName: '雅兰阁',
-            roomBuilding: 1,
-            roomLocation: '1101',
-            date: '2020年11月15日',
-            startTime: '13:00',
-            endTime: '14:10',
-            meetingNum: 15,
-            meetingTheme: '后台管理项',
-            projector: 0,
-            display: 0,
-            whiteboard: 1,
-            status: 1
-          },
-          {
-            id: 1,
-            roomName: '雅兰阁',
-            roomBuilding: 1,
-            roomLocation: '1101',
-            date: '2020年11月15日',
-            startTime: '13:00',
-            endTime: '14:10',
-            meetingNum: 15,
-            meetingTheme: '后台管理项目分享会',
-            bookPerson: '黄佳佳',
-            projector: 1,
-            display: 0,
-            whiteboard: 1,
-            status: 2
-          },
-          {
-            id: 1,
-            roomName: '雅兰阁',
-            roomBuilding: 1,
-            roomLocation: '1101',
-            date: '2020年11月15日',
-            startTime: '13:00',
-            endTime: '14:10',
-            meetingNum: 15,
-            meetingTheme: '后台管理项',
-            projector: 0,
-            display: 0,
-            whiteboard: 1,
-            status: 0
-          }
-        ]
+        meetingList(this.formInline).then(res => {
+          this.approveList = res.data.list
+          this.total = res.data.count
+        })
       },
       // 详情页
       goDetail(item) {
-        console.log(1111)
         this.$router.push({
           path: '/manage/approveDetail?id=' + item.id
         })
@@ -160,7 +75,7 @@
       // 查询
       query() {
         this.formInline.page = 1
-        this.formInline.pageSize = 10
+        this.formInline.pageSize = 8
         this.getApproveList()
       },
       // 每页条数改变

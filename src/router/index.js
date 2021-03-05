@@ -88,6 +88,32 @@ export const constantRoutes = [{
     hidden: true
   },
   {
+    path: '/pcBook',
+    component: Layout,
+    meta: {
+      title: '预订',
+      icon: 'pcBook',
+      roles: [1, 0]
+    },
+    children: [{
+      path: '',
+      name: 'pcBook',
+      component: () => import('@/views/book/pc'),
+      meta: {
+        title: '我要预订',
+        icon: 'book'
+      }
+    }, {
+      path: 'record',
+      name: 'bookRecord',
+      component: () => import('@/views/record/pc'),
+      meta: {
+        title: '预订记录',
+        icon: 'record'
+      }
+    }],
+  },
+  {
     path: '/user',
     component: Layout,
     meta: {

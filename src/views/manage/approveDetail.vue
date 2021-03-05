@@ -23,12 +23,20 @@
         <img v-if="approveResult == 1" src="../../assets/images/pass.png" />
         <img v-if="approveResult == 2" src="../../assets/images/reject.png" />
         <div>{{approveResult == 1 ? '审批通过' : '审批驳回'}}</div>
+        <div>审批人：{{approvePerson}}</div>
         <div v-if="approveResult == 2">驳回原因：{{rejectReason}}</div>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import {
+    buildingList
+  } from '@/utils/index.js'
+  import {
+    meetingQuery,
+    meetingApprove
+  } from '@/api/manage/bookList.js'
   export default {
     data() {
       return {
@@ -65,27 +73,63 @@
           icon: 'el-icon-data-analysis',
           value: ''
         }],
+        approvePerson: '',
         approveResult: 0, // 审批结果（0：等待审批、1：审批通过:2：审批驳回）
         approveResultStaging: 1, // 审批结果暂存（1：审批通过:2：审批驳回）
         rejectReason: '', // 驳回原因
+        buildingList: buildingList,
       }
     },
     created() {
-      console.log(this.$route.query.id)
-      this.approveDetail[0].value = '黄佳佳'
-      this.approveDetail[1].value = '后台管理项目分享会'
-      this.approveDetail[2].value = '雅兰阁'
-      this.approveDetail[3].value = '教学楼A栋323'
-      this.approveDetail[4].value = '2020年11月15日'
-      this.approveDetail[5].value = '13:00-14:10'
-      this.approveDetail[6].value = '12'
-      this.approveDetail[7].value = '投影仪、黑板'
+      this.getApproveDetail(this.$route.query.id)
     },
     computed: {},
     methods: {
+      // 获取预订审批详情
+      getApproveDetail(id) {
+        meetingQuery({
+          id: id
+        }).then(res => {
+          let r = res.data
+          // 预订信息
+          this.approveDetail[0].value = r.bookPerson
+          this.approveDetail[1].value = r.meetingTheme
+          this.approveDetail[2].value = r.roomName
+          this.approveDetail[3].value = this.buildingList.find((ele) => {
+            return ele.id == r.building
+          }).buildingName + r.roomLocation
+          this.approveDetail[4].value = r.meetingDate
+          this.approveDetail[5].value = r.startTime + ' ~ ' + r.endTime
+          this.approveDetail[6].value = r.meetingNum
+
+          let str = ''
+          str = (r.projector) ? '投影仪、' : ''
+          str += (r.display) ? '显示屏、' : ''
+          str += (r.whiteboard) ? '白板、' : ''
+          str += (r.blackboard) ? '黑板、' : ''
+          this.approveDetail[7].value = str
+
+          // 审批信息
+          this.approveResult = r.approveResult
+          this.approvePerson = r.approvePerson
+          this.rejectReason = r.rejectReason
+        })
+      },
       // 审批确定
       approveSure() {
         this.approveResult = this.approveResultStaging
+        let params = {
+          approveResult: this.approveResult,
+          rejectReason: this.rejectReason,
+          id: Number(this.$route.query.id)
+        }
+        meetingApprove(params).then(res => {
+          this.$message({
+            type: 'success',
+            message: '成功!'
+          });
+          this.getApproveDetail(this.$route.query.id)
+        })
       }
     },
   }
@@ -139,9 +183,9 @@
     padding-left: 10px;
     padding-right: 30px;
 
-    .reason-input{
+    .reason-input {
       width: 500px;
-      margin:10px 0;
+      margin: 10px 0;
     }
 
     .approve-image {
@@ -149,12 +193,14 @@
       width: 100%;
       text-align: center;
       font-size: 14px;
+      line-height: 22px;
       color: #606266;
     }
 
     img {
       width: 200px;
       height: 100%;
+      margin-bottom: -30px;
     }
   }
 

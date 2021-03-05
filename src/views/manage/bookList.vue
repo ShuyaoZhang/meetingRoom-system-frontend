@@ -2,7 +2,7 @@
     <div class="roomList">
         <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small" label-width="85px">
             <el-form-item label="会议日期：">
-                <el-date-picker v-model="formInline.date" type="date" placeholder="请选择日期"></el-date-picker>
+                <el-date-picker v-model="formInline.date" type="date" placeholder="请选择日期" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
             <el-form-item label="建筑楼：">
                 <el-select v-model="formInline.building" placeholder="请选择建筑楼" clearable>
@@ -61,6 +61,9 @@
         buildingList,
         projectorList
     } from '@/utils/index.js'
+    import {
+        meetingList
+    } from '@/api/manage/bookList.js'
     export default {
         data() {
             return {
@@ -104,39 +107,11 @@
             // 获取预约列表
             getBookList() {
                 this.listLoading = true
-                this.tableData = [{
-                    id: 1,
-                    bookPerson: '黄佳佳',
-                    roomName: '王小虎',
-                    meetingNum: 12,
-                    meetingTheme: '后台管理项目分享会',
-                    building: 1,
-                    roomLocation: '110',
-                    meetingDate: '2021-02-04',
-                    startTime: '13:00',
-                    endTime: '14:10',
-                    approveResult: 2,
-                    rejectReason: '不',
-                    approvePerson: '4324',
-                    projector: 1,
-                    display: 0,
-                    whiteboard: 1,
-                    blackboard: 1,
-                }, {
-                    id: 2,
-                    bookPerson: '黄佳佳',
-                    roomName: '王小虎',
-                    roomNum: 12,
-                    roomLocation: '110',
-                    approveResult: 1,
-                    projector: 0,
-                    display: 1,
-                    whiteboard: 0,
-                    blackboard: 1,
-                    building: 2
-                }, ]
-                this.listLoading = false
-                this.total = 32
+                meetingList(this.formInline).then(res => {
+                    this.tableData = res.data.list
+                    this.total = res.data.count
+                    this.listLoading = false
+                })
             },
             // 查询
             query() {
