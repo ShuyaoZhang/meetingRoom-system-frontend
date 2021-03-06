@@ -31,33 +31,43 @@
 
       <van-field name="equipment" label="选择设备">
         <template #input>
-          <van-tag :plain="!form.projectorSelect" type="primary" @click="form.projectorSelect = !form.projectorSelect"
-            class="tag" size="large" color="#132CF8">
+          <van-tag :plain="!form.projector" type="primary" @click="form.projector =!form.projector?1:0" class="tag"
+            size="large" color="#132CF8">
             投影仪</van-tag>
-          <van-tag :plain="!form.displaySelect" type="primary" @click="form.displaySelect = !form.displaySelect"
-            class="tag" size="large" color="#132CF8">显示屏
+          <van-tag :plain="!form.display" type="primary" @click="form.display = !form.display?1:0" class="tag"
+            size="large" color="#132CF8">显示屏
           </van-tag>
-          <van-tag :plain="!form.blackboardSelect" type="primary"
-            @click="form.blackboardSelect = !form.blackboardSelect" class="tag" size="large" color="#132CF8">黑板
+          <van-tag :plain="!form.blackboard" type="primary" @click="form.blackboard = !form.blackboard?1:0" class="tag"
+            size="large" color="#132CF8">黑板
           </van-tag>
-          <van-tag :plain="!form.whiteboardSelect" type="primary"
-            @click="form.whiteboardSelect = !form.whiteboardSelect" class="tag" size="large" color="#132CF8">白板
+          <van-tag :plain="!form.whiteboard" type="primary" @click="form.whiteboard = !form.whiteboard?1:0" class="tag"
+            size="large" color="#132CF8">白板
           </van-tag>
         </template>
       </van-field>
+      <van-field clickable name="picker" :value="form.buildingName" label="建筑楼" placeholder="请选择建筑楼"
+        @click="showBuildingPicker = true" is-link />
+      <van-popup v-model="showBuildingPicker" position="bottom">
+        <van-picker show-toolbar :columns="buildingList" value-key="buildingName" @confirm="selectBuilding"
+          @cancel="showBuildingPicker = false" />
+      </van-popup>
+      </van-field>
 
-      <div class="search" @click="search">
-        <van-icon name="search" color="#132CF8" size="22" />
-        <div class="search-text">查询会议室</div>
+      <div style="margin: 20px;" @click="search" v-if="!canBook">
+        <van-button round block color="linear-gradient(to right bottom, #132CF8, #23A4F7)" @click="search">
+          查询会议室
+        </van-button>   
       </div>
 
       <van-field clickable name="picker" :value="form.roomId" label="选择会议室" placeholder="请选择会议室"
-        @click="showPicker = true" required is-link />
+        @click="showPicker = true" required is-link v-if="canBook"/>
       <van-popup v-model="showPicker" position="bottom">
-        <van-picker show-toolbar :columns="roomList" @confirm="selectRoom" @cancel="showPicker = false" />
+        <van-picker show-toolbar :columns="roomList" value-key="roomName" @confirm="selectRoom"
+          @cancel="showPicker = false" />
       </van-popup>
+      </van-field>
 
-      <div style="margin: 20px;">
+      <div style="margin: 20px;" v-if="canBook">
         <van-button round block color="linear-gradient(to right bottom, #132CF8, #23A4F7)" @click="sure">
           预定
         </van-button>
@@ -74,12 +84,18 @@
     Stepper,
     Tag,
     Icon,
-    Picker
+    Picker,
+    Toast
   } from 'vant';
   import {
     parseTime,
-    getDate
+    getDate,
+    buildingList
   } from '@/utils/index.js'
+  import {
+    selectByCondition,
+    meetingBook
+  } from '@/api/book/index.js'
   export default {
     data() {
       return {
@@ -89,19 +105,23 @@
           endTime: parseTime(new Date(), '{h}:{i}'),
           num: 2,
           meetingTheme: '',
-          projectorSelect: false,
-          displaySelect: false,
-          blackboardSelect: false,
-          whiteboardSelect: false,
-          roomId: ''
+          projector: 0,
+          display: 0,
+          blackboard: 0,
+          whiteboard: 0,
+          roomId: '',
+          buildingName: '',
         },
         showCalendar: false,
         minDate: new Date(),
-        maxDate: new Date(new Date().setDate(new Date().getDate() + 7)),
+        maxDate: new Date(new Date().setDate(new Date().getDate() + 6)),
         showStartPicker: false,
         showEndPicker: false,
         showPicker: false,
-        roomList: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+        showBuildingPicker: false,
+        roomList: [],
+        buildingList: buildingList,
+        canBook:false,
       }
     },
     components: {
@@ -112,7 +132,8 @@
       Stepper,
       Tag,
       Icon,
-      Picker
+      Picker,
+      Toast
     },
     created() {},
     computed: {},
@@ -130,13 +151,43 @@
         this.showEndPicker = false;
       },
       selectRoom(val) {
-        this.form.roomId = val;
+        this.form.roomId = val.roomName;
         this.showPicker = false;
       },
-      search() {
-
+      selectBuilding(val, index) {
+        this.form.buildingName = val.buildingName;
+        this.showBuildingPicker = false;
       },
+      // 查询会议室
+      search() {
+        const toast = Toast.loading({
+          forbidClick: true,
+          message: '查询ing',
+        });
+        let params = {
+          ...this.form,
+          building: this.form.buildingName ? this.buildingList.find((ele) => {
+            return ele.buildingName == this.form.buildingName
+          }).id : ''
+        }
+        selectByCondition(params).then(res => {
+          this.roomList = res.data
+          Toast.clear();
+          this.canBook = true
+        })
+      },
+      // 预订会议室
       sure() {
+        let params = {
+          ...this.form,
+          roomId: this.roomList.find((ele) => {
+            return ele.roomName == this.form.roomId
+          }).id
+        }
+        meetingBook(params).then(res => {
+          Toast.success('预订成功,等待审批！');
+          this.$router.push('/mobileRecord')
+        })
 
       }
     },

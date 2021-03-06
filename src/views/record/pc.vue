@@ -2,15 +2,15 @@
   <div class="pcRecord">
     <el-tabs type="border-card" @tab-click="tabChange" v-model="activeTab">
       <el-tab-pane name="1">
-        <span slot="label"><i class="el-icon-success"></i> 已通过</span>
+        <span slot="label"><i class="el-icon-loading"></i> 未开始</span>
         <Record :recordList="recordList"></Record>
       </el-tab-pane>
       <el-tab-pane name="2">
-        <span slot="label"><i class="el-icon-error"></i> 已驳回</span>
+        <span slot="label"><i class="el-icon-alarm-clock"></i> 正在进行</span>
         <Record :recordList="recordList"></Record>
       </el-tab-pane>
       <el-tab-pane name="0">
-        <span slot="label"><i class="el-icon-loading"></i> 等待审批</span>
+        <span slot="label"><i class="el-icon-error"></i> 已结束</span>
         <Record :recordList="recordList"></Record>
       </el-tab-pane>
       <el-pagination class="pagination" @size-change="sizeChange" @current-change="currentChange"

@@ -8,12 +8,12 @@
     <div class="bookForm" v-if="stepActive==1">
       <el-form ref="form" :model="form" :rules="formRules" label-width="100px" size="small">
         <el-form-item label="日期：" prop="date">
-          <el-date-picker type="date" v-model="form.date" value-format="yyyy-MM-dd" format="yyyy-MM-dd">
+          <el-date-picker type="date" v-model="form.date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :picker-options="pickerOptions">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="起止时间：" prop="time">
-          <el-time-picker is-range v-model="form.time" range-separator="至" value-format="hh:mm" format="hh:mm">
-          </el-time-picker>
+          <el-input v-model="form.time[0]" style="width: 100px;"></el-input> 至 
+          <el-input v-model="form.time[1]" style="width: 100px;"></el-input>
         </el-form-item>
         <el-form-item label="参会人数：" prop="num">
           <el-input-number v-model="form.num" :min="2" :max="200"></el-input-number>
@@ -40,7 +40,7 @@
     </div>
     <div class="bookForm" v-if="stepActive==2">
       <span class="bookTitle">选择会议室：</span>
-      <el-select v-model="form.roomId" clearable placeholder="请选择" size="small">
+      <el-select v-model="form.roomId" clearable placeholder="请选择" size="small" no-data-text="未匹配到符合条件的会议室！">
         <el-option v-for="item in roomList" :label="item.roomName" :value="item.id">
         </el-option>
       </el-select>
@@ -50,8 +50,9 @@
       </div>
     </div>
     <div class="bookSuccess" v-if="stepActive==3">
-      <img src="@/assets/images/success.png"><br/>
+      <img src="@/assets/images/success.png"><br />
       预订成功，请等待管理员审批！
+      <el-button @click="bookAgain" icon="el-icon-position" size="small" type="primary">再次预订</el-button>
     </div>
   </div>
 </template>
@@ -61,6 +62,10 @@
     projectorList,
     parseTime
   } from '@/utils/index.js'
+  import {
+    selectByCondition,
+    meetingBook
+  } from '@/api/book/index.js'
   export default {
     data() {
       return {
@@ -77,6 +82,11 @@
           roomId: ''
         },
         equipment: [], // 设备选项
+        pickerOptions:{
+          disabledDate(time) {
+            return time.getTime() > Date.now() + 518400000
+          }
+        },
         formRules: {
           date: [{
             required: true,
@@ -102,23 +112,25 @@
         }
       }
     },
-    mounted() {
-
-    },
-    computed: {},
     methods: {
       // 查询会议室
       query() {
         this.$refs['form'].validate((valid) => {
           if (valid) {
+            let equipment = this.getRowByArr(this.equipment)
             let params = {
-              ...this.form,
-              equipment: this.equipment,
+              ...equipment,
+              num:this.form.num,
+              building:this.form.building,
+              date:this.form.date,
               startTime: this.form.time[0],
               endTime: this.form.time[1],
             }
-            console.log(params)
-            this.stepActive = 2
+            selectByCondition(params).then(res =>{
+              this.roomList = res.data
+              this.stepActive = 2
+            })
+            
           }
         });
       },
@@ -126,17 +138,36 @@
       sure() {
         let params = {
           ...this.form,
-          equipment: this.equipment,
           startTime: this.form.time[0],
           endTime: this.form.time[1],
         }
-        console.log(params)
-        this.stepActive = 3
+        meetingBook(params).then(res =>{
+          this.stepActive = 3
+        })
       },
       // 返回上一步
       back() {
         this.stepActive = 1
-      }
+      },
+      bookAgain(){
+        this.form = { 
+          date: parseTime(new Date(), '{y}-{m}-{d}'),
+          time: [parseTime(new Date(), '{h}:{i}'), parseTime(new Date(), '{h}:{i}')],
+          num: 2,
+          meetingTheme: '',
+          building: '',
+          roomId: ''
+        }
+        this.stepActive = 1
+      },
+      // 根据数组返回row
+      getRowByArr(arr) {
+        var obj = {}
+        for (let i = 0; i < this.projectorList.length; i++) {
+          obj[this.projectorList[i].field] = arr.includes(i + 1) ? 1 : 0
+        }
+        return obj
+      },
     },
   }
 </script>
@@ -156,14 +187,14 @@
     margin: 30px 0 0 80px;
   }
 
-  .bookSuccess{
+  .bookSuccess {
     text-align: center;
     font-size: 16px;
-    color:#909399;
+    color: #909399;
 
-    img{
-      width:200px;
-      height:200px;
+    img {
+      width: 200px;
+      height: 200px;
     }
   }
 </style>
