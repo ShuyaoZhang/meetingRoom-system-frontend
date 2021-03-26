@@ -31,7 +31,7 @@
         recordDetail: [  {
           title: '会议日期',
           icon: 'el-icon-date',
-          value: 'date'
+          value: 'meetingDate'
         }, {
           title: '会议时间',
           icon: 'el-icon-time',

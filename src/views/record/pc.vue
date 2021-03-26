@@ -25,13 +25,16 @@
     buildingList
   } from '@/utils/index.js'
   import Record from '@/components/Record/index.vue'
+  import {
+    getRecordList
+  } from '@/api/record/index.js'
   export default {
     components: {
       Record
     },
     data() {
       return {
-        buildingList:buildingList,
+        buildingList: buildingList,
         activeTab: '1', // 当前选中tab
         recordList: [], // 记录列表
         form: { // 页码
@@ -51,87 +54,26 @@
           statusId: this.activeTab,
           ...this.form
         }
-        console.log(param)
-        this.recordList = [{
-          id: 1,
-          location: '',
-          time: '',
-          equipment: '',
-          roomBuilding: 1,
-          roomLocation: '1101',
-          date: '2020年11月15日',
-          startTime: '13:00',
-          endTime: '14:10',
-          meetingNum: 15,
-          meetingTheme: '后台管理项目分享会',
-          projector: 1,
-          display: 0,
-          whiteboard: 1,
-          blackboard: 1,
-        },{
-          id: 1,
-          location: '',
-          time: '',
-          equipment: '',
-          roomBuilding: 2,
-          roomLocation: '1101',
-          date: '2020年11月15日',
-          startTime: '13:00',
-          endTime: '14:10',
-          meetingNum: 15,
-          meetingTheme: '后台管理项目分享会',
-          projector: 1,
-          display: 0,
-          whiteboard: 1,
-          blackboard: 1,
-        },{
-          id: 1,
-          location: '',
-          time: '',
-          equipment: '',
-          roomBuilding: 3,
-          roomLocation: '1101',
-          date: '2020年11月15日',
-          startTime: '13:00',
-          endTime: '14:10',
-          meetingNum: 15,
-          meetingTheme: '后台管理项目分享会',
-          projector: 1,
-          display: 0,
-          whiteboard: 1,
-          blackboard: 1,
-        },{
-          id: 1,
-          location: '',
-          time: '',
-          equipment: '',
-          roomBuilding: 4,
-          roomLocation: '8101',
-          date: '1020年11月15日',
-          startTime: '15:00',
-          endTime: '16:10',
-          meetingNum: 115,
-          meetingTheme: '11231后台',
-          projector: 0,
-          display: 1,
-          whiteboard: 0,
-          blackboard: 0,
-        }]
-        this.total = this.recordList.length
-        this.changeFormat()
+        getRecordList(param).then(res =>{
+          this.recordList = res.data.list
+          this.total = res.data.count
+          this.changeFormat()
+        })
       },
       // 需将获取后的数据进行格式化
       changeFormat() {
         let str = ''
         for (let i = 0; i < this.total; i++) {
           str = ''
-          this.recordList[i].location = this.buildingList.find((ele)=>{return ele.id == this.recordList[i].roomBuilding}).buildingName+  this.recordList[i].roomLocation
+          this.recordList[i].location = this.buildingList.find((ele) => {
+            return ele.id == this.recordList[i].roomId
+          }).buildingName + this.recordList[i].roomLocation
           this.recordList[i].time = this.recordList[i].startTime + ' ~ ' + this.recordList[i].endTime
           str = (this.recordList[i].projector) ? '投影仪、' : ''
           str += (this.recordList[i].display) ? '显示屏、' : ''
           str += (this.recordList[i].whiteboard) ? '白板、' : ''
           str += (this.recordList[i].blackboard) ? '黑板、' : ''
-          this.recordList[i].equipment = str 
+          this.recordList[i].equipment = str
         }
       },
       // 选中tab改变

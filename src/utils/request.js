@@ -1,5 +1,6 @@
+import router from './../router'
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
@@ -13,7 +14,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     if (store.getters.token) {
-      //config.headers['X-Token'] = getToken()
+      config.headers['access-token'] = getToken()
     }
     return config
   },
@@ -33,30 +34,25 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
-      }
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
       return res
     }
   },
   error => {
-    Message({
-      message: error.msg,
-      type: 'error',
-      duration: 5 * 1000
-    })
-    return Promise.reject(error)
+    console.log(error.response.status)
+    if (error.response.status === 401) { //未登录认证
+       router.push('/')
+    } else if (error.response.status === 403) { //没有权限
+      router.push('/404')
+    } else {
+      Message({
+        message: error.response.data.message,
+        type: 'error',
+        duration: 2 * 1000
+      })
+      return Promise.reject(error.response.data.message)
+    }
   }
 )
 

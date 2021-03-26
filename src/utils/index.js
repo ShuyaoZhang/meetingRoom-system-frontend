@@ -60,7 +60,7 @@ export function getDate(time, AddDayCount) {
   return currentDate;
 }
 
-// 获取近一周（星期一、星期二）
+// 获取近一周
 export function getLastlyWeek() {
   var weekList = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', ]
   var day = new Date().getDay()

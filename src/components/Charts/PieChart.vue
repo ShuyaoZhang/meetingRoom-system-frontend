@@ -68,8 +68,10 @@
                             top: 40,
                         },
                         tooltip: {
-                            trigger: 'item'
+                            trigger: 'item',
+                            formatter: '{a} <br/>{b} : {c} ({d}%)'
                         },
+                        color: ['#3aa1ff', '#f2637b','#fbd437','#4ecb73'],
                         legend: {
                             orient: 'vertical',
                             top: 'bottom',
@@ -78,15 +80,60 @@
                         series: [{
                             name: this.seriesName,
                             type: 'pie',
-                            radius: '50%',
+                            radius: ['40%', '60%'],
                             data: chartData,
+                            zlevel: 1,
                             emphasis: {
                                 itemStyle: {
                                     shadowBlur: 10,
                                     shadowOffsetX: 0,
                                     shadowColor: 'rgba(0, 0, 0, 0.5)'
                                 }
-                            }
+                            },
+                            label: {
+                                normal: {
+                                    padding: [20, -25, 20, -25],
+                                    show: false,
+                                    position: 'center',
+                                    formatter: ['{name|{b}}', '{value|{c}}'].join('\n'),
+                                    rich: {
+                                        value: {
+                                            color: '#303133',
+                                            fontSize: 24,
+                                            lineHeight: 24,
+                                        },
+                                        name: {
+                                            color: '#909399',
+                                            fontSize: 14,
+                                            lineHeight: 35,
+                                        },
+                                    },
+                                },
+                                emphasis: {
+                                    show: true,
+                                    textStyle: {
+                                        fontSize: '16',
+                                        fontWeight: 'bold',
+                                    },
+                                },
+                            },
+                            labelLine: {
+                                normal: {
+                                    show: false,
+                                },
+                            },
+                            itemStyle: {
+                                normal: {
+                                    borderWidth: 2,
+                                    borderColor: '#ffffff',
+                                },
+                                emphasis: {
+                                    borderWidth: 0,
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)',
+                                },
+                            },
                         }]
                     })
                 }

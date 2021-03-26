@@ -5,7 +5,7 @@ import { resetRouter } from '@/router'
 const getDefaultState = () => {
   return {
     token: getToken(),
-    username: '',
+    username: 'admin',
     avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
     role:0,// 0:普通用户、1：管理员
   }
@@ -37,8 +37,8 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(res => {
-        //commit('SET_TOKEN', data.token)
-        //setToken(data.token)
+        commit('SET_TOKEN', res.data.token)
+        setToken(res.data.token)
         commit('SET_NAME', res.data.username)
         commit('SET_ROLE', res.data.role)
         resolve()

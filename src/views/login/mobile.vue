@@ -172,7 +172,7 @@
   }
 
   .middle {
-    padding: 0.8rem 1.5rem;
+    padding: 0.8rem 1.35rem;
 
     .tab {
       display: flex;
@@ -236,7 +236,7 @@
 
       .show-pwd {
         position: relative;
-        right: -35px;
+        right: -30px;
         top: 3px;
         font-size: 16px;
         color: #889aa4;

@@ -93,6 +93,7 @@
                                 formatter: '{value} 个'
                             }
                         },
+                        color: '#3aa1ff',
                         series: [{
                             name: this.seriesName,
                             type: 'line',

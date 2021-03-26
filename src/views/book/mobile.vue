@@ -2,19 +2,19 @@
   <div class="mobileBook">
     <van-form colon>
       <van-field clickable name="calendar" :value="form.date" label="日期" placeholder="请选择日期"
-        @click="showCalendar = true" required is-link />
+        @click="showCalendar = true" required is-link @focus="noBomBox" />
       <van-calendar v-model="showCalendar" @confirm="selectDate" color="#132CF8" :min-date="minDate"
         :max-date="maxDate" />
 
       <van-field clickable name="datetimePicker" :value="form.startTime" label="开始时间" placeholder="请选择开始时间"
-        @click="showStartPicker = true" required is-link />
+        @click="showStartPicker = true" required is-link @focus="noBomBox"/>
       <van-popup v-model="showStartPicker" position="bottom">
         <van-datetime-picker type="time" @confirm="selectStartTime" @cancel="showStartPicker = false" :min-hour="8"
           title="会议开始时间" />
       </van-popup>
 
       <van-field clickable name="datetimePicker" :value="form.endTime" label="结束时间" placeholder="请选择结束时间"
-        @click="showEndPicker = true" required is-link />
+        @click="showEndPicker = true" required is-link @focus="noBomBox"/>
       <van-popup v-model="showEndPicker" position="bottom">
         <van-datetime-picker type="time" @confirm="selectEndTime" @cancel="showEndPicker = false" :min-hour="8"
           title="会议结束时间" />
@@ -46,7 +46,7 @@
         </template>
       </van-field>
       <van-field clickable name="picker" :value="form.buildingName" label="建筑楼" placeholder="请选择建筑楼"
-        @click="showBuildingPicker = true" is-link />
+        @click="showBuildingPicker = true" is-link @focus="noBomBox"/>
       <van-popup v-model="showBuildingPicker" position="bottom">
         <van-picker show-toolbar :columns="buildingList" value-key="buildingName" @confirm="selectBuilding"
           @cancel="showBuildingPicker = false" />
@@ -56,11 +56,11 @@
       <div style="margin: 20px;" @click="search" v-if="!canBook">
         <van-button round block color="linear-gradient(to right bottom, #132CF8, #23A4F7)" @click="search">
           查询会议室
-        </van-button>   
+        </van-button>
       </div>
 
       <van-field clickable name="picker" :value="form.roomId" label="选择会议室" placeholder="请选择会议室"
-        @click="showPicker = true" required is-link v-if="canBook"/>
+        @click="showPicker = true" required is-link v-if="canBook" @focus="noBomBox"/>
       <van-popup v-model="showPicker" position="bottom">
         <van-picker show-toolbar :columns="roomList" value-key="roomName" @confirm="selectRoom"
           @cancel="showPicker = false" />
@@ -70,6 +70,9 @@
       <div style="margin: 20px;" v-if="canBook">
         <van-button round block color="linear-gradient(to right bottom, #132CF8, #23A4F7)" @click="sure">
           预定
+        </van-button>
+        <van-button round block @click="reForm" style="margin-top:8px">
+          重新填写选项
         </van-button>
       </div>
     </van-form>
@@ -121,7 +124,7 @@
         showBuildingPicker: false,
         roomList: [],
         buildingList: buildingList,
-        canBook:false,
+        canBook: false,
       }
     },
     components: {
@@ -158,6 +161,9 @@
         this.form.buildingName = val.buildingName;
         this.showBuildingPicker = false;
       },
+      reForm(){
+        this.canBook = false
+      },
       // 查询会议室
       search() {
         const toast = Toast.loading({
@@ -188,7 +194,10 @@
           Toast.success('预订成功,等待审批！');
           this.$router.push('/mobileRecord')
         })
-
+      },
+      // 点击时禁止弹出手机键盘
+      noBomBox(Event) {
+        document.activeElement.blur();
       }
     },
   }
@@ -196,6 +205,7 @@
 <style lang="scss" scoped>
   .tag {
     margin-right: 10px !important;
+    padding: 5px;
   }
 
   .search {
