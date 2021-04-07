@@ -17,7 +17,7 @@ import mobileLayout from '@/mobileLayout'
   }
  */
 
- // 普通路由
+// 普通路由
 export const constantRoutes = [{
     path: '/',
     redirect: '/pcLogin',
@@ -79,17 +79,20 @@ export const constantRoutes = [{
     children: [{
       path: '/',
       name: 'mobileRecord',
-      component: () => import('@/views/record/mobile')
+      component: () => import('@/views/record/mobile'),
+      meta: {
+        keepAlive: true
+      }
     }, {
       path: 'detail',
       name: 'mobileDetail',
       component: () => import('@/views/detail/mobile')
     }],
     hidden: true
-  },
-  {
+  }, {
     path: '/pcBook',
     component: Layout,
+    key: 'pcBook',
     meta: {
       title: '预订',
       icon: 'pcBook',
@@ -110,110 +113,34 @@ export const constantRoutes = [{
       meta: {
         title: '预订记录',
         icon: 'record'
-      }
-    }],
-  },
-  {
-    path: '/user',
-    component: Layout,
-    meta: {
-      title: '用户管理',
-      icon: 'user',
-      roles: ['admin']
-    },
-    children: [{
-      path: 'userList',
-      name: 'userList',
-      component: () => import('@/views/user/userList'),
-      meta: {
-        title: '用户列表',
-        icon: 'userList'
-      }
-    }],
-  },
-  {
-    path: '/manage',
-    component: Layout,
-    meta: {
-      title: '会议室管理',
-      icon: 'manage',
-      roles: [1]
-    },
-    children: [{
-      path: 'config',
-      name: 'config',
-      component: () => import('@/views/manage/config'),
-      meta: {
-        title: '会议室配置',
-        icon: 'config'
-      }
-    }, {
-      path: 'approve',
-      name: 'approve',
-      component: () => import('@/views/manage/approve'),
-      meta: {
-        title: '预订审批',
-        icon: 'approve'
-      }
-    }, {
-      path: 'approveDetail',
-      name: 'approveDetail',
-      component: () => import('@/views/manage/approveDetail'),
-      hidden: true,
-      meta: {
-        title: '预订审批',
-        icon: 'approve'
-      }
-    }, {
-      path: 'bookList',
-      name: 'bookList',
-      component: () => import('@/views/manage/bookList'),
-      meta: {
-        title: '预订列表',
-        icon: 'bookList'
-      }
-    }, {
-      path: 'statistics',
-      name: 'statistics',
-      component: () => import('@/views/manage/statistics'),
-      meta: {
-        title: '统计分析',
-        icon: 'statistics'
       }
     }],
   },
 ]
 
-// 权限路由
+// 权限路由（仅供管理员使用）
 export const asyncRoutes = [{
-    path: '/pcBook',
+    path: '/user',
+    key: 'user',
     component: Layout,
     meta: {
-      title: '预订',
-      icon: 'pcBook',
-      roles: [1, 0]
+      title: '用户管理',
+      icon: 'user',
+      roles: ['admin']
     },
     children: [{
-      path: '',
-      name: 'pcBook',
-      component: () => import('@/views/book/pc'),
+      path: 'userList',
+      name: 'userList',
+      component: () => import('@/views/user/userList'),
       meta: {
-        title: '我要预订',
-        icon: 'book'
-      }
-    }, {
-      path: 'record',
-      name: 'bookRecord',
-      component: () => import('@/views/record/pc'),
-      meta: {
-        title: '预订记录',
-        icon: 'record'
+        title: '用户列表',
+        icon: 'userList'
       }
     }],
   },
-
   {
     path: '/manage',
+    key: 'manage',
     component: Layout,
     meta: {
       title: '会议室管理',
@@ -263,26 +190,6 @@ export const asyncRoutes = [{
       }
     }],
   },
-
-  {
-    path: '/user',
-    component: Layout,
-    meta: {
-      title: '用户管理',
-      icon: 'user',
-      roles: ['admin']
-    },
-    children: [{
-      path: 'userList',
-      name: 'userList',
-      component: () => import('@/views/user/userList'),
-      meta: {
-        title: '用户列表',
-        icon: 'userList'
-      }
-    }],
-  },
-
   {
     path: '*',
     redirect: '/404',

@@ -221,6 +221,9 @@
                             type: 'success',
                             message: '成功!'
                         });
+                        if (this.tableData.length == 1 && this.total != 1) {
+                            this.formInline.page--
+                        }
                         this.getRoomList()
                     })
                 }).catch(err => {});

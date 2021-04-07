@@ -1,13 +1,25 @@
-import { login, logout, getInfo } from '@/api/user/index'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import { resetRouter } from '@/router'
+import {
+  login,
+  getInfo
+} from '@/api/user/index'
+import {
+  getBuildingList
+} from '@/api/manage/building.js'
+import {
+  getToken,
+  setToken,
+  removeToken
+} from '@/utils/auth'
+import {
+  resetRouter
+} from '@/router'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     username: 'admin',
     avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
-    role:0,// 0:普通用户、1：管理员
+    role: 0, // 0:普通用户、1：管理员
   }
 }
 
@@ -32,15 +44,26 @@ const mutations = {
 }
 
 const actions = {
-  // user login
-  login({ commit }, userInfo) {
-    const { username, password } = userInfo
+  // 登录
+  login({
+    commit
+  }, userInfo) {
+    const {
+      username,
+      password
+    } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(res => {
+      login({
+        username: username.trim(),
+        password: password
+      }).then(res => {
         commit('SET_TOKEN', res.data.token)
         setToken(res.data.token)
         commit('SET_NAME', res.data.username)
         commit('SET_ROLE', res.data.role)
+        getBuildingList().then(res =>{
+          localStorage.setItem("buildingList", JSON.stringify(res.data))
+        })
         resolve()
       }).catch(error => {
         reject(error)
@@ -48,15 +71,24 @@ const actions = {
     })
   },
 
-  // get user info
-  getInfo({ commit, state }) {
+  // 获取用户信息
+  getInfo({
+    commit,
+    state
+  }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
-        const { data } = response
+        const {
+          data
+        } = response
         if (!data) {
           return reject('Verification failed, please Login again.')
         }
-        const { name, avatar,role } = data
+        const {
+          name,
+          avatar,
+          role
+        } = data
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_ROLE', role)
@@ -67,22 +99,20 @@ const actions = {
     })
   },
 
-  // user logout
-  logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+  // 退出登录
+  logout({
+    commit,
+    state
+  }) {
+    removeToken()
+    resetRouter()
+    commit('RESET_STATE')
   },
 
-  // remove token
-  resetToken({ commit }) {
+  // 移除
+  resetToken({
+    commit
+  }) {
     return new Promise(resolve => {
       removeToken() // must remove  token  first
       commit('RESET_STATE')
@@ -97,4 +127,3 @@ export default {
   mutations,
   actions
 }
-

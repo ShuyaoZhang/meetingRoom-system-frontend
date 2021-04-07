@@ -3,12 +3,13 @@
     <van-nav-bar title="会议室预订" v-if="!haveBack"/>
     <van-nav-bar title="会议室预订" left-text="返回" left-arrow @click-left="back" v-else/>
     <div :class="['main',{'minHeight':!haveBack}]">
-      <router-view :key="key" />
+      <keep-alive>
+        <router-view :key="key" v-if="$route.meta.keepAlive" />
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"/>
     </div>
     <van-tabbar v-model="active" z-index='100' active-color="#132CF8" route v-if="!haveBack">
-      <van-tabbar-item to="/mobileIndex" icon="shop-o">首页</van-tabbar-item>
       <van-tabbar-item to="/mobileBook" icon="add-o">预定</van-tabbar-item>
-      <van-tabbar-item to="/mobileMeeting" icon="calendar-o">我的会议</van-tabbar-item>
       <van-tabbar-item to="/mobileRecord" icon="todo-list-o">预定记录</van-tabbar-item>
     </van-tabbar>
   </div>

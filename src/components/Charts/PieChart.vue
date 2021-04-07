@@ -65,7 +65,7 @@
                         title: {
                             text: this.chartTitle,
                             left: 'center',
-                            top: 40,
+                            top: 40
                         },
                         tooltip: {
                             trigger: 'item',

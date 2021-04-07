@@ -6,24 +6,31 @@
 
 <script>
   import store from '@/store'
+  import {
+    getToken
+  } from '@/utils/auth'
   export default {
     name: 'App',
     computed: {
       device() {
         let device = navigator.userAgent.match(
           /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
-          )
-        store.dispatch('app/toggleDevice', device ? 'mobile': 'desktop')
+        )
+        store.dispatch('app/toggleDevice', device ? 'mobile' : 'desktop')
         return device
       },
     },
     mounted() {
-      if (this.device) {
-        this.$router.push('/mobileLogin');
-      } else {
-        this.$router.push('/pcLogin');
+      if (!getToken()) { // 未登录
+        console.log('未登录')
+        if (this.device) {
+          this.$router.push('/mobileLogin');
+        } else {
+          this.$router.push('/pcLogin');
+        }
+      }else{
+        console.log('已登录')
       }
     }
   }
-
 </script>

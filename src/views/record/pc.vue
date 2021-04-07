@@ -66,7 +66,7 @@
         for (let i = 0; i < this.total; i++) {
           str = ''
           this.recordList[i].location = this.buildingList.find((ele) => {
-            return ele.id == this.recordList[i].roomId
+            return ele.id == this.recordList[i].building
           }).buildingName + this.recordList[i].roomLocation
           this.recordList[i].time = this.recordList[i].startTime + ' ~ ' + this.recordList[i].endTime
           str = (this.recordList[i].projector) ? '投影仪、' : ''

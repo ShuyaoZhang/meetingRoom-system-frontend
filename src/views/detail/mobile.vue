@@ -1,10 +1,11 @@
 <template>
   <div class="detail">
     <div class="status">
-      <img v-if="status==0" src="../../assets/images/wait.png">
-      <img v-if="status==1" src="../../assets/images/pass.png">
-      <img v-if="status==2" src="../../assets/images/reject.png">
+      <img v-if="status==0" src="../../assets/images/approve-loading.png">
+      <img v-if="status==1" src="../../assets/images/approve-success.png">
+      <img v-if="status==2" src="../../assets/images/approve-fail.png">
       <div class="status-text">{{status==0?'等待审批ing':status==1?'审批通过':'审批不通过'}}</div>
+       <div class="status-text" v-if="status==2">{{rejectReason}}</div>
     </div>
     <van-cell-group style="width:100%">
       <van-cell v-for="item in recordDetail" :title="item.title" :value="item.value" :icon="item.icon" />
@@ -17,10 +18,15 @@
     CellGroup,
     Icon
   } from 'vant';
+    import {
+    buildingList
+  } from '@/utils/index.js'
   export default {
     data() {
       return {
-        status:2,
+        buildingList:buildingList,
+        status: null,
+        rejectReason:'',
         recordDetail: [{
           title: '会议主题',
           icon: 'star-o',
@@ -58,35 +64,49 @@
       Icon
     },
     created() {
-      console.log(this.$route.query.id)
-      this.recordDetail[0].value = '后台管理项目分享会'
-      this.recordDetail[1].value = '雅兰阁'
-      this.recordDetail[2].value = '教学楼A栋323'
-      this.recordDetail[3].value = '2020年11月15日'
-      this.recordDetail[4].value = '13:00-14:10'
-      this.recordDetail[5].value = '12'
-      this.recordDetail[6].value = '投影仪、黑板'
+      this.changeFormat(this.$route.params.item)
     },
     methods: {
+      // 需将获取后的数据进行格式化
+      changeFormat(detail) {
+        console.log(detail)
+        this.recordDetail[0].value = detail.meetingTheme
+        this.recordDetail[1].value = detail.roomName
+        this.recordDetail[2].value = this.buildingList.find((ele) => {
+          return ele.id == detail.building
+        }).buildingName + detail.roomLocation
+        this.recordDetail[3].value = detail.meetingTheme
+        this.recordDetail[4].value = detail.startTime + ' ~ ' + detail.endTime
+        this.recordDetail[5].value = detail.meetingNum
 
+        let str = ''
+        str = (detail.projector) ? '投影仪、' : ''
+        str += (detail.display) ? '显示屏、' : ''
+        str += (detail.whiteboard) ? '白板、' : ''
+        str += (detail.blackboard) ? '黑板、' : ''
+        this.recordDetail[6].value = str
+
+        this.status = detail.approveResult
+        this.rejectReason = detail.rejectReason
+      }
     },
   }
 </script>
 <style lang="scss" scoped>
-.status{
-  text-align: center;
-  background: #fff;
-  color:#969799;
-  font-size: 14px;
+  .status {
+    text-align: center;
+    background: #fff;
+    color: #969799;
+    font-size: 14px;
 
-  img{
-    width: 5rem;
-    height: 5rem;
-  }
+    img {
+      width: 5rem;
+      height: 5rem;
+    }
 
-  .status-text{
-    position: relative;
-    top:-1rem;
+    .status-text {
+      position: relative;
+      top: -0.5rem;
+    }
   }
-}
 </style>

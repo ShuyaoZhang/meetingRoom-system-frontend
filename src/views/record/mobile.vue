@@ -5,7 +5,7 @@
       <div class="tab-row">
         <div class="tab-item" :class="{active:this.switch==1}" @click="tabSwitch(1)">未开始</div>
         <div class="tab-item" :class="{active:this.switch==2}" @click="tabSwitch(2)">正在进行</div>
-        <div class="tab-item" :class="{active:this.switch==3}" @click="tabSwitch(3)">已结束</div>
+        <div class="tab-item" :class="{active:this.switch==3}" @click="tabSwitch(0)">已结束</div>
       </div>
     </div>
     <div class="list">
@@ -14,10 +14,12 @@
         <img src="@/assets/images/no-data.png" />
         <div>暂无数据</div>
       </div>
-      <div v-else>
-        <div class="list-item" v-for="(item,index) in recordList" @click="goDetail(item.id)">
+      <van-list v-else v-model="listLoading" @load="listLoad" :finished="listFinished" finished-text="没有更多了">
+        <div class="list-item" v-for="(item,index) in recordList" @click="goDetail(item)">
           <div class="meeting-img">
-            <img src="@/assets/images/meeting.png" />
+            <img src="@/assets/images/approve-loading.png" v-if="item.approveResult==0" />
+            <img src="@/assets/images/approve-success.png" v-if="item.approveResult==1" />
+            <img src="@/assets/images/approve-fail.png" v-if="item.approveResult==2" />
           </div>
           <div class="meeting-content">
             <div class="meeting-theme">{{item.meetingTheme}}</div>
@@ -26,13 +28,10 @@
             <van-tag plain type="success" v-if="item.display" style="margin-right: 10px;">显示屏</van-tag>
             <van-tag plain type="success" v-if="item.blackboard" style="margin-right: 10px;">黑板</van-tag>
             <van-tag plain type="success" v-if="item.whiteboard" style="margin-right: 10px;">白板</van-tag>
-            <div class="room-time">{{item.date}} {{item.startTime}} ~ {{item.endTime}}</div>
-            <div class="logo used" v-if="item.status==0">未审批</div>
-            <div class="logo unused" v-if="item.status==1">通过</div>
-            <div class="logo overdue" v-if="item.status==2">驳回</div>
+            <div class="room-time">{{item.meetingDate}} {{item.startTime}} ~ {{item.endTime}}</div>
           </div>
         </div>
-      </div>
+      </van-list>
     </div>
   </div>
 </template>
@@ -40,12 +39,22 @@
   import {
     Tag
   } from 'vant';
+  import {
+    getRecordList
+  } from '@/api/record/index.js'
   export default {
     data() {
       return {
         switch: 1,
         recordList: [],
         loading: false,
+        listLoading:false,// 瀑布流滚动加载
+        listFinished:false,
+        form: {
+          page: 1,
+          pageSize: 5
+        },
+        total:0,
       }
     },
     components: {
@@ -58,49 +67,45 @@
       // 切换
       tabSwitch(val) {
         this.switch = val
+        this.form = {
+          page: 1,
+          pageSize: 5
+        }
+        this.recordList = []
         this.getRecordList()
       },
       // 获取列表
       getRecordList() {
         this.loading = true
-        this.recordList = [{
-            id: 1,
-            roomName: '雅兰阁',
-            roomLocation: '1101',
-            date: '2020年11月15日',
-            startTime: '13:00',
-            endTime: '14:10',
-            meetingNum: 15,
-            meetingTheme: '后台管理项目分享会',
-            bookPerson: '黄佳佳',
-            nameList: ['黄佳佳', '小家', '黄佳佳', '小和', '黄佳佳', '小家'],
-            projector: 1,
-            display: 0,
-            whiteboard: 1,
-            status: 2
-          },
-          {
-            id: 1,
-            roomName: '雅兰阁',
-            roomLocation: '1101',
-            date: '2020年11月15日',
-            startTime: '13:00',
-            endTime: '14:10',
-            meetingNum: 15,
-            meetingTheme: '后台管理项',
-            nameList: ['黄佳佳', '小家', '黄佳佳', '小和', '黄佳佳', '小家'],
-            projector: 0,
-            display: 0,
-            whiteboard: 1,
-            status: 1
+        this.listLoading = true
+        this.listFinished = false
+
+        let param = {
+          statusId: this.switch,
+          ...this.form
+        }
+        getRecordList(param).then(res => {
+          this.recordList = this.recordList.concat(res.data.list)
+          this.total = res.data.count
+          this.loading = false
+          this.listLoading = false
+          if(this.recordList.length >= this.total){
+            this.listFinished = true
           }
-        ]
-        this.loading = false
+        })
+      },
+      // 下拉加载
+      listLoad(){
+        this.form.page ++
+        this.getRecordList()
       },
       // 详细
-      goDetail(id) {
+      goDetail(item) {
         this.$router.push({
-          path: '/mobileRecord/detail?id=' + id
+          name:'mobileDetail',
+          params: {
+            item:item
+          }
         })
       },
 
@@ -193,36 +198,5 @@
     margin-top: 50px;
     color: #bbb;
     font-size: 16px;
-  }
-
-
-
-  .logo {
-    height: 1.2rem;
-    width: 1.2rem;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transform: rotate(-330deg);
-    z-index: 1;
-    position: relative;
-    left: 190px;
-    top: -110px;
-  }
-
-  .overdue {
-    border: 2px solid #F66862;
-    color: #F66F6A;
-  }
-
-  .used {
-    border: 2px solid #ff9900;
-    color: #ff9900;
-  }
-
-  .unused {
-    border: 2px solid #55C463;
-    color: #55C463;
   }
 </style>

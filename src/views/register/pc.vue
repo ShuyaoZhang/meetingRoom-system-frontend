@@ -7,6 +7,7 @@
     <el-form ref="registerForm" :model="registerForm" :rules="registerRules" class="login-form" auto-complete="off"
       label-position="left">
       <h2 class="login-title">注册</h2>
+      <el-link type="warning" icon="el-icon-warning">一经注册，用户名不可修改！</el-link>
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />

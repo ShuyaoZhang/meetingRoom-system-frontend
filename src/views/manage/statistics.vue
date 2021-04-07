@@ -1,38 +1,42 @@
 <template>
   <div class="statistics">
-    <show-pannel />
-    <div style="background:#fff">
-    <el-row :gutter="1">
-      <el-col :xs="24" :xl="12">
-        <pie-chart :chartData="meetingRoomNum" chartTitle="各建筑楼会议室数量" seriesName="会议室数量"></pie-chart>
-      </el-col>
-      <el-col :xs="24" :xl="12">
-
-      </el-col>
-    </el-row>
-    <el-divider><i class="el-icon-scissors"></i></el-divider>
-
-    <el-form class="right-inline" label-width="70px">
-      <el-form-item label="建筑楼：">
-        <el-checkbox :indeterminate="buildingIM" v-model="buildingAll" @change="buildingCheckAll">全选</el-checkbox>
-        <el-checkbox-group v-model="buildingcheck" @change="buildingCheckChange">
-          <el-checkbox v-for="item in buildingList" :label="item.id" :key="item.id">{{item.buildingName}}
-          </el-checkbox>
-        </el-checkbox-group>
-        <el-button @click="query" type="primary" icon="el-icon-search" size="small">查询</el-button>
-      </el-form-item>
-    </el-form>
-    <el-row :gutter="1">
-      <el-col :xs="24" :xl="12">
-        <pie-chart :chartData="meetingRoomSize" chartTitle="不同容纳人数的会议室数量" seriesName="会议室数量"></pie-chart>
-      </el-col>
-      <el-col :xs="24" :xl="12">
-        <el-switch v-model="meetingChangeType" active-color="#4135DD" inactive-color="#4135DD" active-text="近一周"
-          inactive-text="近一月"></el-switch>
-        <line-chart :chartData="meetingChangeAmount" :xAxisData="meetingChangeXAxis" :chartTitle="meetingChangeTitle"
-          seriesName="会议数量"></line-chart>
-      </el-col>
-    </el-row>
+    <show-pannel :data="pannelValue" />
+    <div style="background:#fff;position: relative;top:-250px;">
+      <div></div>
+      <el-form class="right-inline" label-width="70px">
+        <el-form-item label="建筑楼：">
+          <el-checkbox :indeterminate="buildingIM" v-model="buildingAll" @change="buildingCheckAll">全选</el-checkbox>
+          <el-checkbox-group v-model="buildingcheck" @change="buildingCheckChange">
+            <el-checkbox v-for="item in buildingList" :label="item.id" :key="item.id">{{item.buildingName}}
+            </el-checkbox>
+          </el-checkbox-group>
+          <el-button @click="query" type="primary" icon="el-icon-search" size="small">查询</el-button>
+        </el-form-item>
+      </el-form>
+      <el-row :gutter="1">
+        <el-col :xs="24" :lg="12">
+          <pie-chart :chartData="meetingRoomSize" chartTitle="不同容纳人数的会议室数量" seriesName="会议室数量"></pie-chart>
+        </el-col>
+        <el-col :xs="24" :lg="12">
+          <el-switch v-model="meetingChangeType" active-color="#4135DD" inactive-color="#4135DD" active-text="近一周"
+            inactive-text="近一月"></el-switch>
+          <line-chart :chartData="meetingChangeAmount" :xAxisData="meetingChangeXAxis" :chartTitle="meetingChangeTitle"
+            seriesName="会议数量"></line-chart>
+        </el-col>
+      </el-row>
+      <!-- <el-divider><i class="el-icon-scissors"></i></el-divider>
+      <h2 style="margin-left: 300px;">近一月不同会议室的使用率</h2>
+      <el-row :gutter="40">
+        <el-col :sm="6" :lg="3" :offset="2">
+          <el-progress type="circle" :percentage="25" color="#4135DD" :format="progressFormat"></el-progress>
+        </el-col>
+        <el-col :sm="6" :lg="3">
+          <el-progress type="circle" :percentage="25" color="#4135DD" :format="progressFormat"></el-progress>
+        </el-col>
+        <el-col :sm="6" :lg="3">
+          <el-progress type="circle" :percentage="25" color="#4135DD" :format="progressFormat"></el-progress>
+        </el-col>
+      </el-row> -->
     </div>
   </div>
 </template>
@@ -47,6 +51,7 @@
     getLastlyMonth
   } from '@/utils/index.js'
   import {
+    pannelData,
     roomNumInBuilding,
     roomSize,
     meetingNum
@@ -60,7 +65,7 @@
     data() {
       return {
         buildingList: buildingList,
-        meetingRoomNum: [],
+        pannelValue: {},
         meetingRoomSize: [],
         meetingChangeType: true,
         meetingChangeTitle: '',
@@ -82,16 +87,17 @@
       }
       this.meetingChangeTitle = '近一周会议数量'
       this.meetingChangeXAxis = getLastlyWeek()
-      this.roomNumInBuilding()
+      this.pannelData()
       this.roomSize()
       this.meetingNum()
+
     },
     computed: {},
     methods: {
-      // 获取各建筑楼会议室数量
-      roomNumInBuilding() {
-        roomNumInBuilding().then(res => {
-          this.meetingRoomNum = res.data
+      // 获取面板数据
+      pannelData() {
+        pannelData().then(res => {
+          this.pannelValue = res.data
         })
       },
       // 获取不同容纳人数的会议室数量(可多选建筑楼)
@@ -112,10 +118,13 @@
           this.handleData(res.data)
         })
       },
+      progressFormat() {
+        return '小型会议室'
+      },
       // 处理数据
       handleData(data) {
         data.sort(this.sortRule)
-        for(let i=0;i<data.length;i++){
+        for (let i = 0; i < data.length; i++) {
           this.meetingChangeAmount.push(data[i].value)
         }
       },

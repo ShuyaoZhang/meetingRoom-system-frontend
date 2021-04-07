@@ -10,6 +10,7 @@
         <div class="tab-item" :class="{active:this.switch==2}" @click="tabSwitch(2)">用户注册</div>
       </div>
       <div class="form">
+        <el-link type="warning" icon="el-icon-warning" v-if="this.switch==2">一经注册，用户名不可修改！</el-link>
         <div class="form-item">
           <img src="../../assets/images/username.png" />
           <input type="text" name="username" v-model="username" autocomplete="new-username" placeholder="请输入用户名">
@@ -137,6 +138,7 @@
             }
             register(params).then((res) => {
               this.$message.success('注册成功！');
+              this.switch = 1
             }).catch(() => {
             })          
           }

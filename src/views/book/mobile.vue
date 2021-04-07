@@ -1,55 +1,55 @@
 <template>
   <div class="mobileBook">
-    <van-form colon>
+    <van-form colon :disabled="canBook">
       <van-field clickable name="calendar" :value="form.date" label="日期" placeholder="请选择日期"
         @click="showCalendar = true" required is-link @focus="noBomBox" />
-      <van-calendar v-model="showCalendar" @confirm="selectDate" color="#132CF8" :min-date="minDate"
-        :max-date="maxDate" />
+      <van-calendar v-model="showCalendar" @confirm="selectDate" color="#132CF8" :min-date="minDate" :max-date="maxDate"
+        :readonly="canBook" />
 
       <van-field clickable name="datetimePicker" :value="form.startTime" label="开始时间" placeholder="请选择开始时间"
-        @click="showStartPicker = true" required is-link @focus="noBomBox"/>
+        @click="showStartPicker = true" required is-link @focus="noBomBox" />
       <van-popup v-model="showStartPicker" position="bottom">
         <van-datetime-picker type="time" @confirm="selectStartTime" @cancel="showStartPicker = false" :min-hour="8"
-          title="会议开始时间" />
+          title="会议开始时间" :readonly="canBook" />
       </van-popup>
 
       <van-field clickable name="datetimePicker" :value="form.endTime" label="结束时间" placeholder="请选择结束时间"
-        @click="showEndPicker = true" required is-link @focus="noBomBox"/>
+        @click="showEndPicker = true" required is-link @focus="noBomBox" />
       <van-popup v-model="showEndPicker" position="bottom">
         <van-datetime-picker type="time" @confirm="selectEndTime" @cancel="showEndPicker = false" :min-hour="8"
-          title="会议结束时间" />
+          title="会议结束时间" :readonly="canBook" />
       </van-popup>
 
       <van-field name="stepper" label="参会人数" required>
         <template #input>
-          <van-stepper v-model="form.num" min="2" max="100" integer input-width="40px" />
+          <van-stepper v-model="form.num" min="2" max="100" integer input-width="40px" :disabled="canBook" />
         </template>
       </van-field>
 
       <van-field v-model="form.meetingTheme" name="会议主题" label="会议主题" placeholder="请输入会议主题" required autosize rows="1"
-        type="textarea" clearable />
+        type="textarea" clearable :disabled="canBook" />
 
       <van-field name="equipment" label="选择设备">
         <template #input>
           <van-tag :plain="!form.projector" type="primary" @click="form.projector =!form.projector?1:0" class="tag"
-            size="large" color="#132CF8">
+            size="large" :color="canBook?'#c8c9cc':'#132CF8'">
             投影仪</van-tag>
           <van-tag :plain="!form.display" type="primary" @click="form.display = !form.display?1:0" class="tag"
-            size="large" color="#132CF8">显示屏
+            size="large" :color="canBook?'#c8c9cc':'#132CF8'">显示屏
           </van-tag>
           <van-tag :plain="!form.blackboard" type="primary" @click="form.blackboard = !form.blackboard?1:0" class="tag"
-            size="large" color="#132CF8">黑板
+            size="large" :color="canBook?'#c8c9cc':'#132CF8'">黑板
           </van-tag>
           <van-tag :plain="!form.whiteboard" type="primary" @click="form.whiteboard = !form.whiteboard?1:0" class="tag"
-            size="large" color="#132CF8">白板
+            size="large" :color="canBook?'#c8c9cc':'#132CF8'">白板
           </van-tag>
         </template>
       </van-field>
       <van-field clickable name="picker" :value="form.buildingName" label="建筑楼" placeholder="请选择建筑楼"
-        @click="showBuildingPicker = true" is-link @focus="noBomBox"/>
+        @click="showBuildingPicker = true" is-link @focus="noBomBox" />
       <van-popup v-model="showBuildingPicker" position="bottom">
         <van-picker show-toolbar :columns="buildingList" value-key="buildingName" @confirm="selectBuilding"
-          @cancel="showBuildingPicker = false" />
+          @cancel="showBuildingPicker = false" :readonly="canBook" />
       </van-popup>
       </van-field>
 
@@ -58,24 +58,26 @@
           查询会议室
         </van-button>
       </div>
-
-      <van-field clickable name="picker" :value="form.roomId" label="选择会议室" placeholder="请选择会议室"
-        @click="showPicker = true" required is-link v-if="canBook" @focus="noBomBox"/>
-      <van-popup v-model="showPicker" position="bottom">
-        <van-picker show-toolbar :columns="roomList" value-key="roomName" @confirm="selectRoom"
-          @cancel="showPicker = false" />
-      </van-popup>
-      </van-field>
-
-      <div style="margin: 20px;" v-if="canBook">
-        <van-button round block color="linear-gradient(to right bottom, #132CF8, #23A4F7)" @click="sure">
-          预定
-        </van-button>
-        <van-button round block @click="reForm" style="margin-top:8px">
-          重新填写选项
-        </van-button>
-      </div>
     </van-form>
+
+    <van-field clickable name="picker" :value="form.roomId" label="选择会议室" placeholder="请选择会议室"
+      @click="showPicker = true" required is-link v-if="canBook" @focus="noBomBox" />
+    <van-popup v-model="showPicker" position="bottom">
+      <van-picker show-toolbar :columns="roomList" value-key="roomName" @confirm="selectRoom"
+        @cancel="showPicker = false">
+      </van-picker>
+    </van-popup>
+    </van-field>
+
+    <div style="margin: 20px;" v-if="canBook">
+      <van-button round block color="linear-gradient(to right bottom, #132CF8, #23A4F7)" @click="sure">
+        预定
+      </van-button>
+      <van-button round block @click="reForm" style="margin-top:8px">
+        重新填写选项
+      </van-button>
+    </div>
+
   </div>
 </template>
 <script>
@@ -93,7 +95,8 @@
   import {
     parseTime,
     getDate,
-    buildingList
+    buildingList,
+    change
   } from '@/utils/index.js'
   import {
     selectByCondition,
@@ -161,7 +164,7 @@
         this.form.buildingName = val.buildingName;
         this.showBuildingPicker = false;
       },
-      reForm(){
+      reForm() {
         this.canBook = false
       },
       // 查询会议室
@@ -177,9 +180,13 @@
           }).id : ''
         }
         selectByCondition(params).then(res => {
-          this.roomList = res.data
           Toast.clear();
           this.canBook = true
+
+          for(let i=0;i<res.data.length;i++){
+            res.data[i].roomName = res.data[i].roomName + '(' + change(res.data[i].building,this.buildingList,'id','buildingName') + ')'
+          }
+          this.roomList = res.data
         })
       },
       // 预订会议室

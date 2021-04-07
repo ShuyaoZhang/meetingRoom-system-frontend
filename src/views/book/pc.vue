@@ -19,7 +19,7 @@
           <el-input-number v-model="form.num" :min="2" :max="200"></el-input-number>
         </el-form-item>
         <el-form-item label="会议主题：" prop="meetingTheme">
-          <el-input placeholder="请输入会议主题" v-model="form.meetingTheme" clearable style="width:500px"></el-input>
+          <el-input placeholder="请输入会议主题" v-model="form.meetingTheme" clearable style="width:95%"></el-input>
         </el-form-item>
         <el-form-item label="选择设备：">
           <el-checkbox-group v-model="equipment">
@@ -37,17 +37,20 @@
           <el-button @click="query" type="primary" icon="el-icon-search">查询会议室</el-button>
         </el-form-item>
       </el-form>
+      <img src="@/assets/images/writeCondition.png"></img>
     </div>
     <div class="bookForm" v-if="stepActive==2">
       <span class="bookTitle">选择会议室：</span>
       <el-select v-model="form.roomId" clearable placeholder="请选择" size="small" no-data-text="未匹配到符合条件的会议室！">
-        <el-option v-for="item in roomList" :label="item.roomName" :value="item.id">
+        <el-option v-for="item in roomList" :value="item.id" :label="item.roomName">
+          {{item.roomName}} ({{ item.building | change(buildingList,'id','buildingName')}})
         </el-option>
       </el-select>
       <div class="bookButton">
         <el-button @click="back" icon="el-icon-back" size="small">返回上一步</el-button>
         <el-button @click="sure" type="primary" icon="el-icon-circle-check" size="small">预订会议室</el-button>
       </div>
+      <img src="@/assets/images/selectRoom.png"></img>
     </div>
     <div class="bookSuccess" v-if="stepActive==3">
       <img src="@/assets/images/success.png"><br />
@@ -60,7 +63,7 @@
   import {
     buildingList,
     projectorList,
-    parseTime
+    parseTime,
   } from '@/utils/index.js'
   import {
     selectByCondition,
@@ -149,6 +152,7 @@
       back() {
         this.stepActive = 1
       },
+      // 再次预订会议室
       bookAgain(){
         this.form = { 
           date: parseTime(new Date(), '{y}-{m}-{d}'),
@@ -191,10 +195,27 @@
     text-align: center;
     font-size: 16px;
     color: #909399;
+    margin-top:50px;
 
     img {
+      width: 150px;
+      height: 150px;
+    }
+  }
+
+  .bookForm{
+    margin-left:33%;
+    margin-right:30%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+    padding:20px;
+    background:#fff;
+    padding-bottom:100px;
+
+    img {
+      margin-top:-80px;
       width: 200px;
-      height: 200px;
+      height: 150px;
+      float:right;
     }
   }
 </style>

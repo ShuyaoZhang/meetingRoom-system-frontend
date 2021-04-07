@@ -10,6 +10,7 @@
         :unique-opened="true"
         :active-text-color="variables.menuActiveText"
         :collapse-transition="false"
+        :default-openeds = "defaultOpeneds"
         mode="vertical"
       >
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
@@ -32,6 +33,9 @@ export default {
     ]),
     routes() {
       return this.$router.options.routes
+    },
+    defaultOpeneds(){
+      return ['/pcBook','/manage']
     },
     activeMenu() {
       const route = this.$route

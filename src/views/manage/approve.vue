@@ -138,11 +138,11 @@
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
-      -webkit-filter: blur(1px);
-      -moz-filter: blur(1px);
-      -o-filter: blur(1px);
-      -ms-filter: blur(1px);
-      filter: blur(1px);
+      -webkit-filter: blur(2px);
+      -moz-filter: blur(2px);
+      -o-filter: blur(2px);
+      -ms-filter: blur(2px);
+      filter: blur(2px);
     }
   }
 </style>

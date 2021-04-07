@@ -12,11 +12,6 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              个人中心
-            </el-dropdown-item>
-          </router-link>
           <el-dropdown-item @click.native="logout">
             <span style="display:block;">退出登录</span>
           </el-dropdown-item>
@@ -49,7 +44,7 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      this.$router.push(`/pcLogin?redirect=${this.$route.fullPath}`)
+      this.$router.push(`/pcLogin`)
     }
   }
 }

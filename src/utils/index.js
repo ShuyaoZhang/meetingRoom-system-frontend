@@ -77,7 +77,7 @@ export function getLastlyMonth() {
   date.setDate(date.getDate() - 30) // 获取一个月前的时间戳
   var monthArr = []
   for (let i = 0; i < 30; i++) {
-    monthArr.push(getDate(date,i))
+    monthArr.push(getDate(date, i))
   }
   return monthArr
 }
@@ -140,24 +140,36 @@ export function debounce(func, wait, immediate) {
   }
 }
 
+// ID转对应的值
+export function change(val, arr, id = 'id', field = 'name') {
+  const len = arr.length
+  for (let i = 0; i < len; i++) {
+    if (arr[i][id] == val) {
+      return arr[i][field]
+    }
+  }
+}
+
 // 建筑楼列表
-export const buildingList = [{
-    id: 1,
-    buildingName: '教学楼'
-  },
-  {
-    id: 2,
-    buildingName: '图书馆'
-  },
-  {
-    id: 3,
-    buildingName: '行政楼'
-  },
-  {
-    id: 4,
-    buildingName: '宿舍楼'
-  },
-]
+// export const buildingList = [{
+//     id: 1,
+//     buildingName: '教学楼'
+//   },
+//   {
+//     id: 2,
+//     buildingName: '图书馆'
+//   },
+//   {
+//     id: 3,
+//     buildingName: '行政楼'
+//   },
+//   {
+//     id: 4,
+//     buildingName: '宿舍楼'
+//   },
+// ]
+export const buildingList = JSON.parse(localStorage.getItem('buildingList'))
+
 
 // 会议室设备列表
 export const projectorList = [{
@@ -185,12 +197,12 @@ export const projectorList = [{
 // 预订状态
 export const statusList = [{
     id: 1,
-    statusName: '通过',
+    statusName: '已通过',
     adminName: '已通过'
   },
   {
     id: 2,
-    statusName: '驳回',
+    statusName: '已驳回',
     adminName: '已驳回'
   },
   {

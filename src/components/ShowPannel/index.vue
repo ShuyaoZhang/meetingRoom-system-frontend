@@ -11,11 +11,11 @@
           <div class="panel-box-right">
             <div class="panel-box-item">
               <div class="panel-box-title">建筑楼总数</div>
-              <div class="panel-box-value">4</div>
+              <div class="panel-box-value">{{data.buildingNum}}</div>
             </div>
             <div class="panel-box-item">
               <div class="panel-box-title">会议室总数</div>
-              <div class="panel-box-value">243</div>
+              <div class="panel-box-value">{{data.roomNum}}</div>
             </div>
           </div>
         </div>
@@ -30,19 +30,21 @@
           <div class="panel-box-right">
             <div class="panel-box-item">
               <div class="panel-box-title">通过会议室</div>
-              <div class="panel-box-value">2314</div>
+              <div class="panel-box-value">{{data.meetingResultArr[1].value}}</div>
             </div>
             <div class="panel-box-item">
               <div class="panel-box-title">驳回会议室</div>
-              <div class="panel-box-value">23</div>
+              <div class="panel-box-value">{{data.meetingResultArr[2].value}}</div>
             </div>
             <div class="panel-box-item">
               <div class="panel-box-title">未审批会议室</div>
-              <div class="panel-box-value">23</div>
+              <div class="panel-box-value">{{data.meetingResultArr[0].value}}</div>
             </div>
           </div>
         </div>
       </el-col>
+    </el-row>
+    <el-row :gutter="40" class="panel-group panel-bottom">
       <el-col :xs="12" :sm="12" :lg="6">
         <div class="panel-box">
           <div class="panel-box-left">
@@ -53,11 +55,11 @@
           <div class="panel-box-right">
             <div class="panel-box-item">
               <div class="panel-box-title">今日会议数</div>
-              <div class="panel-box-value">4</div>
+              <div class="panel-box-value">{{data.meetingDateArr[0].value}}</div>
             </div>
             <div class="panel-box-item">
               <div class="panel-box-title">明日会议数</div>
-              <div class="panel-box-value">243</div>
+              <div class="panel-box-value">{{data.meetingDateArr[1].value}}</div>
             </div>
           </div>
         </div>
@@ -70,27 +72,57 @@
             </div>
           </div>
           <div class="panel-box-right hot">
-            <img src="@/assets/images/first.png" /><div class="panel-box-value hot first">教学楼110</div><br>
-            <img src="@/assets/images/second.png" /><div class="panel-box-value hot second">教学楼110</div><br>
-            <img src="@/assets/images/third.png" /><div class="panel-box-value hot third">教学楼110</div><br>
+            <img src="@/assets/images/first.png" />
+            <div class="panel-box-value hot first">{{data.firstRoom}}</div><br>
+            <img src="@/assets/images/second.png" />
+            <div class="panel-box-value hot second">{{data.secondRoom}}</div><br>
+            <img src="@/assets/images/third.png" />
+            <div class="panel-box-value hot third">{{data.thirdRoom}}</div><br>
           </div>
         </div>
       </el-col>
     </el-row>
+    <div style="position: relative;top:-250px;">
+      <el-row :gutter="40"> 
+        <el-col :xs="24" :sm="24" :lg="10" :offset="12">
+          <div style="background:#fff">
+            <pie-chart :chartData="meetingRoomNum" seriesName="建筑楼中会议室数量" height="250px"></pie-chart>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 <script>
+  import PieChart from '@/components/Charts/PieChart.vue'
+  import {
+    roomNumInBuilding,
+  } from '@/api/manage/statistics.js'
   export default {
+    components: {
+      PieChart,
+    },
     data() {
       return {
-
+        meetingRoomNum: [],
       }
     },
     props: {
-
+      data: {
+        type: Object,
+        required: true
+      }
     },
-    created() {},
-    methods: {},
+    created() {
+      this.roomNumInBuilding()
+    },
+    methods: { // 获取各建筑楼会议室数量
+      roomNumInBuilding() {
+        roomNumInBuilding().then(res => {
+          this.meetingRoomNum = res.data
+        })
+      },
+    },
   }
 </script>
 <style lang="scss" scoped>
@@ -148,34 +180,41 @@
         line-height: 24px;
         display: inline-block;
 
-        img{
+        img {
           width: 22px;
-          height:22px;
-          margin-right:5px;
+          height: 22px;
+          margin-right: 5px;
         }
       }
-      
-      .first{
+
+      .first {
         color: #FD0002;
       }
 
-      .second{
+      .second {
         color: #5191FF;
       }
 
-      .third{
+      .third {
         color: #FFAF00;
       }
 
-      .pannel-two{
+      .pannel-two {
         background: rgba(231, 166, 97, 0.1);
       }
-      .pannel-three{
+
+      .pannel-three {
         background: rgba(252, 70, 107, 0.08);
       }
-      .pannel-four{
+
+      .pannel-four {
         background: rgba(84, 222, 205, 0.1);
       }
+    }
+
+    .panel-bottom {
+      display: block;
+      margin-top: 10px;
     }
   }
 </style>

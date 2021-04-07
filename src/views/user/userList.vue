@@ -117,6 +117,9 @@
               type: 'success',
               message: '删除成功!'
             });
+            if(this.tableData.length == 1 && this.total != 1){
+              this.formInline.page --
+            }
             this.getUserList()
           })
         }).catch(err => {});
