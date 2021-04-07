@@ -25,12 +25,6 @@ import 'lib-flexible'
 import filters from './filters'// 全局过滤器
 Object.keys(filters).forEach(key => Vue.filter(key, filters[key]))
 
-
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
-}
-
 Vue.use(ElementUI, { locale })
 Vue.use(Button).use(Checkbox).use(Notify).use(NavBar).use(Tabbar).use(TabbarItem).use(Tag).use(Loading).use(Form).use(Calendar).use(DatetimePicker).use(Field).use(Stepper).use(Popup).use(Icon).use(Picker).use(Cell).use(CellGroup).use(List)
 Vue.config.productionTip = false

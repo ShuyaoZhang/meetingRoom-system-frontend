@@ -44,32 +44,12 @@ export const constantRoutes = [{
     hidden: true
   },
   {
-    path: '/mobileIndex',
-    component: mobileLayout,
-    children: [{
-      path: 'mobileIndex',
-      name: 'mobileIndex',
-      component: () => import('@/views/dashboard/mobile')
-    }],
-    hidden: true
-  },
-  {
     path: '/mobileBook',
     component: mobileLayout,
     children: [{
       path: '/',
       name: 'mobileBook',
       component: () => import('@/views/book/mobile')
-    }],
-    hidden: true
-  },
-  {
-    path: '/mobileMeeting',
-    component: mobileLayout,
-    children: [{
-      path: '/',
-      name: 'mobileMeeting',
-      component: () => import('@/views/meeting/mobile')
     }],
     hidden: true
   },
