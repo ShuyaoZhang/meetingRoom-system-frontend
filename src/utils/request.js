@@ -2,7 +2,7 @@ import router from './../router'
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getToken,removeToken } from '@/utils/auth'
 
 // 创建一个axios实例
 const service = axios.create({
@@ -19,7 +19,6 @@ service.interceptors.request.use(
     return config
   },
   error => {
-    console.log(error) 
     return Promise.reject(error)
   }
 )
@@ -40,8 +39,12 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log(error.response.status)
     if (error.response.status === 401) { //未登录认证
+       removeToken()
+       Message({
+        message: 'token不存在，请重新登录！',
+        type: 'error'
+      })
        router.push('/')
     } else if (error.response.status === 403) { //没有权限
       router.push('/404')

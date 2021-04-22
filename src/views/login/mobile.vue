@@ -128,7 +128,7 @@
             }
             this.$store.dispatch('user/login', params).then(() => {
               this.$router.push({
-                path: 'mobileIndex'
+                path: 'mobileBook'
               })
             })
           } else { // 注册

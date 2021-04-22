@@ -30,7 +30,7 @@
 
     <el-pagination class="pagination" @size-change="sizeChange" @current-change="currentChange"
       :current-page="formInline.page" :page-size="formInline.pageSize" :page-sizes="[8, 16, 24, 32]" background
-      layout="total, sizes, prev, pager, next, jumper" :total="total">
+      layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top:-30px">
     </el-pagination>
   </div>
 </template>
